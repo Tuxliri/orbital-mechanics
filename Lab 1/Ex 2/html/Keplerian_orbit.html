@@ -1,0 +1,208 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Keplerian_orbit</title><meta name="generator" content="MATLAB 9.8"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-09-26"><meta name="DC.source" content="Keplerian_orbit.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">Exercise 2a -  Integrate numerically a Keplerian orbit (two-body problem)</a></li><li><a href="#2">Set options for ODE solver</a></li><li><a href="#3">Set initial conditions</a></li><li><a href="#4">Calculate theoretical constants</a></li><li><a href="#5">Compute the integration of the ode</a></li><li><a href="#6">Calculate numerically the velocities, radiuses and specific energy</a></li><li><a href="#7">Calculate angular momentum vector h and eccentricity vector and check that</a></li><li><a href="#8">Radial and transversal components of the velocity</a></li><li><a href="#9">Perpendicularity check e - h</a></li><li><a href="#10">Plot specific energy</a></li><li><a href="#12">Orbit 3D plot</a></li></ul></div><h2 id="1">Exercise 2a -  Integrate numerically a Keplerian orbit (two-body problem)</h2><pre class="codeinput">clc
+clear <span class="string">all</span>
+close <span class="string">all</span>
+</pre><pre class="codeoutput error">Error using dbstatus
+Error: File: G:\My Drive\Documents\1st year MSC\Orbital Mechanics\Labs\Lab 1\Ex 2\Keplerian_orbit.m Line: 68 Column: 8
+Character vector is not terminated properly.
+</pre><h2 id="2">Set options for ODE solver</h2><pre class="codeinput">opts = odeset(<span class="string">'Reltol'</span>,1e-13,<span class="string">'AbsTol'</span>,1e-14,<span class="string">'Stats'</span>,<span class="string">'on'</span>);
+</pre><h2 id="3">Set initial conditions</h2><pre class="codeinput">mu = 398600;                <span class="comment">% Earth's gravitational parameter   [ km^3/s^2 ]</span>
+r0 = [ 26578.137, 0, 0 ];   <span class="comment">% Initial radius vector             [ km ]</span>
+v0 = [ 0, 3.873, 0 ];      <span class="comment">% Initial velocity vector           [ km/s ]</span>
+</pre><h2 id="4">Calculate theoretical constants</h2><p>Specific energy (constant)                                    [ km^2/s^2 ]</p><pre class="codeinput">epsilon0 = 0.5*norm(v0)^2 - mu/norm(r0);
+
+a = -mu/(2*epsilon0);        <span class="comment">% Semi-major axis                   [ km ]</span>
+
+y0 = [ r0(1) v0(1) r0(2) v0(2) r0(3) v0(3) ];       <span class="comment">% Initial state vector</span>
+
+<span class="comment">% Define time of integration</span>
+T = 2*pi*sqrt(a^3/mu);      <span class="comment">% Period                            [ s ]</span>
+tspan = [0 T];
+</pre><h2 id="5">Compute the integration of the ode</h2><pre class="codeinput">[t, y] = ode113(@(t,y) twobodyode(t,y,mu), tspan, y0, opts);
+</pre><h2 id="6">Calculate numerically the velocities, radiuses and specific energy</h2><pre class="codeinput">v = [y(:,2) y(:,4) y(:,6)];                   <span class="comment">% Velocities       [ km/s ]</span>
+r = [y(:,1) y(:,3) y(:,5)];                   <span class="comment">% Radiuses         [ km ]</span>
+
+
+<span class="keyword">for</span> i=1:length(v)
+    epsilon(i) = 0.5*(norm(v(i,:)))^2 - mu/norm(r(i,:));  <span class="comment">% Specific Energy [km^2/s^2]</span>
+<span class="keyword">end</span>
+</pre><h2 id="7">Calculate angular momentum vector h and eccentricity vector and check that</h2><pre>they remain constant in magnitude and direction</pre><pre class="codeinput"><span class="keyword">for</span> i=1:length(r)
+    h(i,:) = cross(r(i,:),v(i,:));           <span class="comment">% Angular momentum (constant)       [ km^2/s ]</span>
+    e(i,:) = cross(v(i,:) , h(i,:))./mu - r(i,:)./norm(r(i,:)); <span class="comment">% Eccentricity vector</span>
+    theta(i) = acos(dot(r(i,:),e(i,:))/(norm(r(i,:))*norm(e(i,:))));  <span class="comment">% True anomaly    [-]</span>
+<span class="keyword">end</span>
+</pre><h2 id="8">Radial and transversal components of the velocity</h2><pre class="codeinput"><span class="keyword">for</span> i=1:length(e)
+    v_r(i) = mu*norm(e(i,:))*sin(theta(i))/norm(h(i,:));
+    v_theta(i) = mu*(1 + norm(e(i,:))*cos(theta(i)))/norm(h(i,:));
+<span class="keyword">end</span>
+</pre><h2 id="9">Perpendicularity check e - h</h2><p>Vectors are perpendicular if their dot product is 0</p><pre class="codeinput"><span class="keyword">for</span> i = 1:length(e)
+    perpendicularity(i) = dot(e(i,:),h(i,:));
+<span class="keyword">end</span>
+</pre><h2 id="10">Plot specific energy</h2><pre class="codeinput">plot(t,epsilon)
+grid <span class="string">on</span>
+title(<span class="string">'Specific Energy'</span>)
+</pre><pre class="codeinput">ylabel(<span class="untermstring">'</span>
+</pre><h2 id="12">Orbit 3D plot</h2><pre class="codeinput">figure()
+plot3(y(:,1),y(:,3),y(:,5), <span class="string">'Color'</span>, <span class="string">'r'</span>, <span class="string">'LineWidth'</span>, 2)
+axis <span class="string">equal</span>
+axis([-inf inf -inf inf -20000 20000])
+xlabel(<span class="string">'Rx [Km]'</span>)
+ylabel(<span class="string">'Ry [Km]'</span>)
+zlabel(<span class="string">'Rz [Km]'</span>)
+grid <span class="string">on</span>
+hold <span class="string">on</span>
+plot3(0,0,0, <span class="string">'-o'</span>,<span class="string">'Color'</span>,<span class="string">'b'</span>,<span class="string">'MarkerSize'</span>,20,<span class="string">'MarkerFaceColor'</span>,<span class="string">'#D9FFFF'</span>)
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2020a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Exercise 2a -  Integrate numerically a Keplerian orbit (two-body problem)
+clc
+clear all
+close all
+
+%% Set options for ODE solver
+opts = odeset('Reltol',1e-13,'AbsTol',1e-14,'Stats','on');
+
+%% Set initial conditions
+
+mu = 398600;                % Earth's gravitational parameter   [ km^3/s^2 ]
+r0 = [ 26578.137, 0, 0 ];   % Initial radius vector             [ km ]
+v0 = [ 0, 3.873, 0 ];      % Initial velocity vector           [ km/s ]
+
+%% Calculate theoretical constants
+% Specific energy (constant)                                    [ km^2/s^2 ]
+epsilon0 = 0.5*norm(v0)^2 - mu/norm(r0);
+
+a = -mu/(2*epsilon0);        % Semi-major axis                   [ km ]
+
+y0 = [ r0(1) v0(1) r0(2) v0(2) r0(3) v0(3) ];       % Initial state vector
+
+% Define time of integration
+T = 2*pi*sqrt(a^3/mu);      % Period                            [ s ]
+tspan = [0 T];
+
+%% Compute the integration of the ode
+
+[t, y] = ode113(@(t,y) twobodyode(t,y,mu), tspan, y0, opts);
+
+%% Calculate numerically the velocities, radiuses and specific energy
+
+v = [y(:,2) y(:,4) y(:,6)];                   % Velocities       [ km/s ]
+r = [y(:,1) y(:,3) y(:,5)];                   % Radiuses         [ km ]
+
+
+for i=1:length(v)
+    epsilon(i) = 0.5*(norm(v(i,:)))^2 - mu/norm(r(i,:));  % Specific Energy [km^2/s^2]
+end
+
+%% Calculate angular momentum vector h and eccentricity vector and check that
+%  they remain constant in magnitude and direction
+
+for i=1:length(r)
+    h(i,:) = cross(r(i,:),v(i,:));           % Angular momentum (constant)       [ km^2/s ]
+    e(i,:) = cross(v(i,:) , h(i,:))./mu - r(i,:)./norm(r(i,:)); % Eccentricity vector
+    theta(i) = acos(dot(r(i,:),e(i,:))/(norm(r(i,:))*norm(e(i,:))));  % True anomaly    [-]
+end
+
+%% Radial and transversal components of the velocity
+
+for i=1:length(e)
+    v_r(i) = mu*norm(e(i,:))*sin(theta(i))/norm(h(i,:));
+    v_theta(i) = mu*(1 + norm(e(i,:))*cos(theta(i)))/norm(h(i,:));
+end
+
+%% Perpendicularity check e - h
+% Vectors are perpendicular if their dot product is 0
+
+for i = 1:length(e)
+    perpendicularity(i) = dot(e(i,:),h(i,:));
+end
+
+%% Plot specific energy
+plot(t,epsilon)
+grid on
+title('Specific Energy')
+ylabel('
+
+%% Orbit 3D plot
+
+figure()
+plot3(y(:,1),y(:,3),y(:,5), 'Color', 'r', 'LineWidth', 2)
+axis equal
+axis([-inf inf -inf inf -20000 20000])
+xlabel('Rx [Km]')
+ylabel('Ry [Km]')
+zlabel('Rz [Km]')
+grid on
+hold on
+plot3(0,0,0, '-o','Color','b','MarkerSize',20,'MarkerFaceColor','#D9FFFF')
+
+##### SOURCE END #####
+--></body></html>
