@@ -18,7 +18,7 @@ function [DV, T1, T2, DV1, DV2,dep_orbit, arr_orbit,rtf0,vtf0]...
 %                   9:   Pluto
 %                   10:  Sun
 %
-%	planetB[1]    Integer number identifying the departure celestial body (< 11)
+%	planetB[1]    Integer number identifying the arrival celestial body (< 11)
 %   windowA[1x2]    Vector with transfer window opening and closing times in
 %                 mjd2000 from departure body; first el. is opening of
 %                 transfer window, second el. is closing of transfer window
