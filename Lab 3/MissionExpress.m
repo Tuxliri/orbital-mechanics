@@ -19,7 +19,7 @@ DAY2SECS = 24*60*60;
 % and planetB, under the following mission requirements:
 
 MISSION = {'Mercury',1,[2023 11 01; 2025 01 01], [2024 04 01; 2025 03 01], 7.0,[210,210,210];
-           'Venus',2,[2024 06 01; 2026 11 01], [2024 12 01; 2027 06 01], 3.0,[255,235,186];
+           'Venus',2,[2024 06 01; 2026 11 01], [2024 12 01; 2027 06 01], 3.0,[254,235,186];
            'Mars',4,[2025 08 01; 2031 01 01], [2026 01 01; 2032 01 01],3.5,[217, 83, 25];
            'Jupiter',5,[2026 06 01; 2028 06 01], [2028 06 01; 2034 01 01],9.1,[201,144,57];
            'Saturn',6,[2027 09 01; 2029 10 01], [2030 04 01; 2036 03 01],11.5,[200,130,60];
@@ -30,7 +30,7 @@ MISSION = {'Mercury',1,[2023 11 01; 2025 01 01], [2024 04 01; 2025 03 01], 7.0,[
     
 
 % Numbers of the mission to be selected
-ID = 5;
+ID = 6;
 
 
 %% Create a departure window vector
@@ -53,7 +53,7 @@ windowPlanetA = [date2mjd2000(window_A(1,1:6)) date2mjd2000(window_A(2,1:6))];
 windowPlanetB = [date2mjd2000(window_B(1,1:6)) date2mjd2000(window_B(2,1:6))];
 
 
-[DV, T1, T2, DV1, DV2,DEP_ORBIT,ARR_ORBIT,r0TF,v0TF] = tfdesigner(planetA,planetB,windowPlanetA,windowPlanetB,100,100);
+[DV, T1, T2, DV1, DV2,DEP_ORBIT,ARR_ORBIT,r0TF,v0TF] = tfdesigner(planetA,planetB,windowPlanetA,windowPlanetB,501,500);
 
 %% find the initial guess minimum DV
 % constrained problem: the required DV1 must be less than the maximum
@@ -68,6 +68,8 @@ OPT_DEP_MJD2000 = T1(i_min);
 OPT_ARR_MJD2000 = T2(k_min);
 
 %% find the minmum DV dates in MJD2000 format through numerical optimization
+% NOW IT IS A CONSTRAINED OPTIMIZATION PROBLEM: constraint of DV1 < vinf
+
 options = optimoptions('fminunc','OptimalityTolerance',1e-12,'StepTolerance',1e-12);
 
 % Departure and arrival dates vector
@@ -193,10 +195,17 @@ DEP_A.HandleVisibility = 'off';
 
 % plot initial and final position of arrival planet
 
-ARR_B = plot3(R_B_arr(1),R_B_arr(2),R_B_arr(3),'-o','MarkerFaceColor','#BC2731','MarkerSize',10);
+ARR_B = plot3(R_B_arr(1),R_B_arr(2),R_B_arr(3));
+ARR_B.Marker = 'o';
+ARR_B.MarkerFaceColor = PB_ORBIT.Color;
+ARR_B.MarkerSize = 10;
 ARR_B.HandleVisibility = 'off';
 
 DEP_B = plot3(R_B_dep(1),R_B_dep(2),R_B_dep(3),'-o','MarkerFaceColor','#BC2731','MarkerSize',10);
+DEP_B.HandleVisibility = 'off';
+DEP_B.Marker = 'o';
+DEP_B.MarkerFaceColor = PB_ORBIT.Color;
+DEP_B.MarkerSize = 10;
 DEP_B.HandleVisibility = 'off';
 
 % plot transfer windows
