@@ -22,6 +22,9 @@ MISSION = {'Mercury',1,[2023 11 01; 2025 01 01], [2024 04 01; 2025 03 01], 7.0,[
            'Venus',2,[2024 06 01; 2026 11 01], [2024 12 01; 2027 06 01], 3.0,[255,235,186];
            'Mars',4,[2025 08 01; 2031 01 01], [2026 01 01; 2032 01 01],3.5,[217, 83, 25];
            'Jupiter',5,[2026 06 01; 2028 06 01], [2028 06 01; 2034 01 01],9.1,[201,144,57];
+           'Saturn',6,[2027 09 01; 2029 10 01], [2030 04 01; 2036 03 01],11.5,[200,130,60];
+           'Uranus',7,[2027 01 01; 2029 01 01], [2031 04 01; 2045 12 01],12.1,[213, 251, 252];
+           'Neptune',8,[2025 01 01; 2026 10 01], [2036 01 01; 2055 06 01],12.5,[62, 102, 249];
            'Mars Express',4,[2003 04 01; 2003 08 01], [2003 09 01; 2004 03 01],4,[217, 83, 25];
            };
     
@@ -50,11 +53,12 @@ windowPlanetA = [date2mjd2000(window_A(1,1:6)) date2mjd2000(window_A(2,1:6))];
 windowPlanetB = [date2mjd2000(window_B(1,1:6)) date2mjd2000(window_B(2,1:6))];
 
 
-[DV, T1, T2, DV1, DV2,DEP_ORBIT,ARR_ORBIT,r0TF,v0TF] = tfdesigner(planetA,planetB,windowPlanetA,windowPlanetB,1000,1000);
+[DV, T1, T2, DV1, DV2,DEP_ORBIT,ARR_ORBIT,r0TF,v0TF] = tfdesigner(planetA,planetB,windowPlanetA,windowPlanetB,100,100);
 
 %% find the initial guess minimum DV
-
-min_DV0 = min(min(DV));
+% constrained problem: the required DV1 must be less than the maximum
+% excess velocity from the launcher vinf
+min_DV0 = min(DV(DV1 < vinf));
 
 % index of the minimum of DVtot
 [i_min, k_min] = find(DV==min_DV0);
@@ -67,10 +71,10 @@ OPT_ARR_MJD2000 = T2(k_min);
 options = optimoptions('fminunc','OptimalityTolerance',1e-12,'StepTolerance',1e-12);
 
 % Departure and arrival dates vector
-x = fminunc(@(x) designer_opt(planetA,planetB,x(1),x(2)), [OPT_DEP_MJD2000 OPT_ARR_MJD2000],options);
-
-OPT_DEP_MJD2000 = x(1);
-OPT_ARR_MJD2000 = x(2);
+% x = fminunc(@(x) designer_opt(planetA,planetB,x(1),x(2)), [OPT_DEP_MJD2000 OPT_ARR_MJD2000],options);
+% 
+% OPT_DEP_MJD2000 = x(1);
+% OPT_ARR_MJD2000 = x(2);
 
 % Find the orbital paremeters of the optimal transfer orbit
 
@@ -179,16 +183,21 @@ ARR_A= plot3(R_A_arr(1),R_A_arr(2),R_A_arr(3));
 ARR_A.Marker = 'o';
 ARR_A.MarkerFaceColor = PA_ORBIT.Color;
 ARR_A.MarkerSize = 10;
+ARR_A.HandleVisibility = 'off';
 
 DEP_A= plot3(R_A_dep(1),R_A_dep(2),R_A_dep(3));
 DEP_A.Marker = 'o';
 DEP_A.MarkerFaceColor = PA_ORBIT.Color;
 DEP_A.MarkerSize = 10;
+DEP_A.HandleVisibility = 'off';
 
-% plot initial and final position of departure planet
+% plot initial and final position of arrival planet
 
-plot3(R_B_arr(1),R_B_arr(2),R_B_arr(3),'-o','MarkerFaceColor','#BC2731','MarkerSize',10)
-plot3(R_B_dep(1),R_B_dep(2),R_B_dep(3),'-o','MarkerFaceColor','#BC2731','MarkerSize',10)
+ARR_B = plot3(R_B_arr(1),R_B_arr(2),R_B_arr(3),'-o','MarkerFaceColor','#BC2731','MarkerSize',10);
+ARR_B.HandleVisibility = 'off';
+
+DEP_B = plot3(R_B_dep(1),R_B_dep(2),R_B_dep(3),'-o','MarkerFaceColor','#BC2731','MarkerSize',10);
+DEP_B.HandleVisibility = 'off';
 
 % plot transfer windows
 DEP_WIN=plot3(DEP_ORBIT(:,1),DEP_ORBIT(:,2),DEP_ORBIT(:,3),'Color',[PA_ORBIT.Color 0.5],'LineWidth', 10);
