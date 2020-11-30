@@ -30,7 +30,7 @@ MISSION = {'Mercury',1,[2023 11 01; 2025 01 01], [2024 04 01; 2025 03 01], 7.0,[
     
 
 % Numbers of the mission to be selected
-ID = 8;
+ID = 6;
 
 
 %% Create a departure window vector
@@ -70,9 +70,15 @@ OPT_ARR_MJD2000 = T2(k_min);
 %% find the minmum DV dates in MJD2000 format through numerical optimization
 % NOW IT IS A CONSTRAINED OPTIMIZATION PROBLEM: constraint of DV1 < vinf
 
-options = optimoptions('fmincon','OptimalityTolerance',1e-12,'StepTolerance',1e-12);
+options = optimoptions('fminunc','OptimalityTolerance',1e-12,'StepTolerance',1e-12);
 
-% Optimization function matrices
+% Departure and arrival dates vector
+x0 = [OPT_DEP_MJD2000 OPT_ARR_MJD2000];
+x = fmincon(@(x) designer_opt(planetA,planetB,x(1),x(2)),x0,A,b,beq,lb, ...
+    ub, @(x) launcherCONSTR(x(1),x(2),planetA,planetB,vinf) ,options);
+% 
+% OPT_DEP_MJD2000 = x(1);
+% OPT_ARR_MJD2000 = x(2);
 A = [];     
 b = [];
 Aeq = [];
@@ -84,17 +90,6 @@ beq = [];
 
 ub = [windowPlanetA(2), windowPlanetB(2)];
 lb = [windowPlanetA(1), windowPlanetB(1)];
-
-% Departure and arrival dates vector
-x0 = [OPT_DEP_MJD2000 OPT_ARR_MJD2000];
-
-% Constrained optimization solver
-x = fmincon(@(x) designer_opt(planetA,planetB,x(1),x(2)),x0,A,b,Aeq,beq,lb,ub, @(x) launcherCONSTR(x(1),x(2),planetA,planetB,vinf) ,options);
-
-OPT_DEP_MJD2000 = x(1);
-OPT_ARR_MJD2000 = x(2);
-
-
 
 % Find the orbital paremeters of the optimal transfer orbit
 

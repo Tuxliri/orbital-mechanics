@@ -1,4 +1,4 @@
-function DV = designer_opt(planetA,planetB,windowA,windowsB)
+function DV = designer_opt(planetA,planetB,windowA,windowB)
 %DESIGNER_OPTIMIZATION This is a wrapper to find the minimum DV using the
 %fminunc or fmincon optimization problems
 % INPUT:
@@ -7,6 +7,6 @@ function DV = designer_opt(planetA,planetB,windowA,windowsB)
 %   x[2x2]          vector with dates in the following 
 
 [DV, ~, ~, ~, ~,~, ~,~,~]...
-    = tfdesigner(planetA,planetB,windowA,windowsB,1,1);
+    = tfdesigner(planetA,planetB,windowA,windowB,1,1);
 end
 
