@@ -11,7 +11,7 @@ function [r_vec,v_vec]=kep2car(a,e,i,RAAN,omega,f,mu)
 % 2)    when e=0, omega has no physical meaning. The reason is the same as
 %       before.
 % PROTOTYPE:
-%    [r_vec,v_vec] = kep2car(a, e, i, RAAN, omega, M) 
+%    [r_vec,v_vec] = kep2car(a, e, i, RAAN, omega, f, mu) 
 %   
 % INPUT:
 %   a[1]        semi-major axis     [ km ]
