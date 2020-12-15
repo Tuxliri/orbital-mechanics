@@ -28,6 +28,9 @@ Delta = 9200;       % Asymptote distance [km]
 % Select the appropriate case for the asymptote position
 asymptote = 'under';
 
+% Improvement:
+% implement https://en.wikipedia.org/wiki/Rodrigues%27_rotation_formula
+% to calculate the rotated vector vinfP
 switch asymptote
     
     case 'front'    % leading-side flyby

@@ -39,8 +39,8 @@ TOF = t2 - t1;         % [s]
     lambertMR(ri,rf,TOF,mu,0,0,0,1);
 
 %% Compute the total cost of the maneuvre
-DV1 = norm(vi-v1L);
-DV2 = norm(v2L-vf);
+DV1 = norm(vi - v1L);
+DV2 = norm(v2L - vf);
 
 DV = DV1 + DV2;
 

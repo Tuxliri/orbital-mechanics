@@ -52,8 +52,8 @@ windowPlanetA = [date2mjd2000(window_A(1,1:6)) date2mjd2000(window_A(2,1:6))];
 
 windowPlanetB = [date2mjd2000(window_B(1,1:6)) date2mjd2000(window_B(2,1:6))];
 
-
-[DV, T1, T2, DV1, DV2,DEP_ORBIT,ARR_ORBIT,r0TF,v0TF] = tfdesigner(planetA,planetB,windowPlanetA,windowPlanetB,501,500);
+tStart = tic;
+[DV, T1, T2, DV1, DV2,DEP_ORBIT,ARR_ORBIT,r0TF,v0TF] = tfdesigner(planetA,planetB,windowPlanetA,windowPlanetB,1000,1000);
 
 %% find the initial guess minimum DV
 % constrained problem: the required DV1 must be less than the maximum
@@ -67,11 +67,14 @@ min_DV0 = min(DV(DV1 < vinf));
 OPT_DEP_MJD2000 = T1(i_min);
 OPT_ARR_MJD2000 = T2(k_min);
 
+t_STANDARD = toc(tStart);
+
 %% find the minmum DV dates in MJD2000 format through numerical optimization
 % NOW IT IS A CONSTRAINED OPTIMIZATION PROBLEM: constraint of DV1 < vinf
+tStart = tic;
 
 options = optimoptions('fmincon','OptimalityTolerance',1e-12,'StepTolerance',1e-12);
-
+% optsGA = 
 % Optimization function matrices
 A = [];     
 b = [];
@@ -94,15 +97,28 @@ x = fmincon(@(x) designer_opt(planetA,planetB,x(1),x(2)),x0,A,b,Aeq,beq,lb,ub, @
 OPT_DEP_MJD2000 = x(1);
 OPT_ARR_MJD2000 = x(2);
 
-
-
 % Find the orbital paremeters of the optimal transfer orbit
 
 [min_DV, ~, ~, ~, ~,~, ~,OPT_r0,OPT_v0]...
     = tfdesigner(planetA,planetB,OPT_DEP_MJD2000,OPT_ARR_MJD2000,1,1);
 
+t_OPTIMIZATION = toc(tStart);
+
 OPT_r0 = reshape(OPT_r0,1,3);
 OPT_v0 = reshape(OPT_v0,1,3);
+
+%% Test of the genetic algorithm solver
+tStart = tic;
+
+xGA = ga(@(x) tfdesigner(planetA,planetB,x(1),x(2),1,1),2,A,b,Aeq,beq,lb,ub, @(x) launcherCONSTR(x(1),x(2),planetA,planetB,vinf) );
+[min_DVGA, ~, ~, ~, ~,~, ~,~,~]...
+    = tfdesigner(planetA,planetB,xGA(1),xGA(2),1,1);
+
+t_GA = toc(tStart);
+
+x_PRIME = fmincon(@(x) designer_opt(planetA,planetB,xGA(1),xGA(2)),x0,A,b,Aeq,beq,lb,ub, @(x) launcherCONSTR(x(1),x(2),planetA,planetB,vinf) ,options);
+[min_DV_PRIME, ~, ~, ~, ~,~, ~,~,~]...
+    = tfdesigner(planetA,planetB,x_PRIME(1),x_PRIME(2),1,1);
 
 %% plot the porkchop plot
 % make a few levels
