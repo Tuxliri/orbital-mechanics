@@ -44,4 +44,4 @@ vp_hoh = sqrt(muSun*(2/rp_hoh - 1/a_hoh));
 DV1 = abs(va_hoh - v_a);
 DV2 = abs(vp_hoh - v_p);
 
-TOF = pi*sqrt(a_hoh^3 / muSun)/(365*24*3600);
+TOF = pi*sqrt(a_hoh^3 / muSun)/(365*24*3600);eb

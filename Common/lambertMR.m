@@ -100,7 +100,7 @@ function [A,P,E,ERROR,VI,VF,TPAR,THETA] = lambertMR(RI,RF,TOF,MU,orbitType,Nrev,
 %                       iterations exceeded.
 %	VI[3]       Vector containing the initial velocity vector in Cartesian
 %               coordinates [L/T].
-%	VT[1]		Vector containing the final velocity vector in Cartesian
+%	VT[3]		Vector containing the final velocity vector in Cartesian
 %               coordinates [L/T].
 %	TPAR[1] 	Parabolic flight time between RI and RF [T].
 %	THETA[1]	Transfer angle [radians].
