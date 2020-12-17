@@ -30,7 +30,7 @@ vinfp = norm(vinfP);
 % Calculate the turning angle of the maneuvre
 delta = acos(dot(vinfM,vinfP)/(vinfm*vinfp));
 
-%% FIX: USE FLYBY-UNPOW
+%% FIX: USE FLYBY-UNPOW?
 if delta < 1e-6
     dv_p=0;
     delta=0;
