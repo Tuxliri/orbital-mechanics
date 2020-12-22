@@ -1,4 +1,4 @@
-function [DV, DV_dep, DV_arr, DV_ga, rp]...
+function [DV, DV_dep, DV_arr, FLYBY,TRANSFER1,TRANSFER2]...
     = GAtransfer(planetA,planetB,planetC,t_dep,t_ga,t_arr)
 % Get the different DV needed for the transfer between two celestial bodies
 % and the respective times of departure and arrival
@@ -53,18 +53,37 @@ muSun = astroConstants(4);
 % the velocity at arrival of planet B is the one to be used as the V_minus
 % in the computation of the powered flyby manoeuvre (v_GA_minus)
 
-[~,DV_dep,~,~,v_GA_minus] = single_arc(t_dep,t_ga,muSun,r_A,r_B,v_A,v_B);
+[~,DV_dep,~,TRANSFER1.v1,v_GA_minus] = single_arc(t_dep,t_ga,muSun,r_A,r_B,v_A,v_B);
+TRANSFER1.r1 = r_A;
+TRANSFER1.r2 = r_B;
+TRANSFER1.v2 = v_GA_minus;
+TRANSFER1.t_dep = t_dep;
+TRANSFER1.t_arr = t_ga;
 
 %% Calculate the second transfer arc and the cost to get from the second 
 %  transfer orbit to the orbit of the arrival planet
 
-[~,~,DV_arr,v_GA_plus,~] = single_arc(t_ga,t_arr,muSun,r_B,r_C,v_B,v_C);
+[~,~,DV_arr,v_GA_plus,TRANSFER2.v2] = single_arc(t_ga,t_arr,muSun,r_B,r_C,v_B,v_C);
+
+TRANSFER2.r1 = r_B;
+TRANSFER2.r2 = r_C;
+TRANSFER2.v1 = v_GA_plus;
+TRANSFER2.t_dep = t_ga;
+TRANSFER2.t_arr = t_arr;
 
 %% Calcualte the cost of the gravity assist
 
-[DV_ga,delta,a,e,Delta,rp,vp0] = flybypow(v_GA_minus - v_B,v_GA_plus - v_B,planetB.mu);
+[DV_ga,delta,a,e,Delta,rp,vp0] = flybypow(v_GA_minus - v_B, v_GA_plus - v_B,planetB.mu);
 
 DV = DV_dep + DV_arr + abs(DV_ga);
+
+FLYBY.DV = DV_ga;
+FLYBY.delta = delta;
+FLYBY.a = a;
+FLYBY.e = e;
+FLYBY.Delta = Delta;
+FLYBY.rp = rp;
+FLYBY.vp0 = vp0;
 
 end
 
