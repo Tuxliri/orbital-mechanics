@@ -54,15 +54,6 @@ legend on
 TF = plot3(r_TF_ARC2(:,1),r_TF_ARC2(:,2),r_TF_ARC2(:,3), 'LineWidth', 2);
 TF.Color = '#77AC30';
 TF.DisplayName = 'Transfer Arc 2';
-% 
-% TF_ORBIT1 = plot3(r_TF_ORBIT1(:,1),r_TF_ORBIT1(:,2),r_TF_ORBIT1(:,3),'--', 'LineWidth', 2);
-% TF_ORBIT1.DisplayName = 'Transfer orbit 1';
-% TF_ORBIT1.Color = TF.Color;
-% 
-% 
-% TF_ORBIT2 = plot3(r_TF_ORBIT2(:,1),r_TF_ORBIT2(:,2),r_TF_ORBIT2(:,3),'--', 'LineWidth', 2);
-% TF_ORBIT2.DisplayName = 'Transfer orbit 2';
-% TF_ORBIT2.Color = TF.Color;
 
 PA_ORBIT = plot3(R_A(:,1),R_A(:,2),R_A(:,3), 'LineWidth', 2) ;  
 PA_ORBIT.DisplayName = 'departure planet orbit';
@@ -78,12 +69,6 @@ PC_ORBIT.Color = planetC.Color;
 
 % plot initial position of departure planet
 
-% ARR_A= plot3(R_A_arr(1),R_A_arr(2),R_A_arr(3));
-% ARR_A.Marker = 'o';
-% ARR_A.MarkerFaceColor = PA_ORBIT.Color;
-% ARR_A.MarkerSize = 10;
-% ARR_A.HandleVisibility = 'off';
-
 DEP_A= plot3(R_A_dep(1),R_A_dep(2),R_A_dep(3));
 DEP_A.Marker = 'o';
 DEP_A.MarkerFaceColor = planetA.Color;
@@ -98,13 +83,6 @@ ARR_B.MarkerFaceColor = planetB.Color;
 ARR_B.MarkerSize = 10;
 ARR_B.HandleVisibility = 'off';
 
-% DEP_B = plot3(R_B_dep(1),R_B_dep(2),R_B_dep(3),'-o','MarkerFaceColor','#BC2731','MarkerSize',10);
-% DEP_B.HandleVisibility = 'off';
-% DEP_B.Marker = 'o';
-% DEP_B.MarkerFaceColor = PB_ORBIT.Color;
-% DEP_B.MarkerSize = 10;
-% DEP_B.HandleVisibility = 'off';
-
 % plot final position of arrival planet
 
 ARR_C = plot3(R_C_arr(1),R_C_arr(2),R_C_arr(3));
@@ -114,12 +92,6 @@ ARR_C.MarkerSize = 10;
 ARR_C.HandleVisibility = 'off';
 
 % plot transfer windows
-% DEP_WIN=plot3(DEP_ORBIT(:,1),DEP_ORBIT(:,2),DEP_ORBIT(:,3),'Color',[PA_ORBIT.Color 0.5],'LineWidth', 10);
-% DEP_WIN.DisplayName = 'Departure Window';
-% 
-% ARR_WIN=plot3(ARR_ORBIT(:,1),ARR_ORBIT(:,2),ARR_ORBIT(:,3),'Color',[PB_ORBIT.Color 0.5],'LineWidth', 10);
-% ARR_WIN.DisplayName = 'Arrival Window';
-
 
 axis equal
 grid on

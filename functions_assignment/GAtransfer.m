@@ -54,6 +54,7 @@ muSun = astroConstants(4);
 % in the computation of the powered flyby manoeuvre (v_GA_minus)
 
 [~,DV_dep,~,TRANSFER1.v1,v_GA_minus] = single_arc(t_dep,t_ga,muSun,r_A,r_B,v_A,v_B);
+
 TRANSFER1.r1 = r_A;
 TRANSFER1.r2 = r_B;
 TRANSFER1.v2 = v_GA_minus;
