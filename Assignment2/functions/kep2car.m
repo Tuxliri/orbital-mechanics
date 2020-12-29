@@ -7,18 +7,18 @@ function [r_vec,v_vec] = kep2car(a,e,i,RAAN,omega,f,mu)
 % PROTOTYPE:
 %    [r_vec,v_vec] = kep2car(a, e, i, RAAN, omega, f, mu) 
 %   
-% INPUT:
-%   a[1]        semi-major axis     [ km ]
-%   e[1]        eccentricity        [ - ]
-%   i[1]        inclination         [ rad ]
+% INPUT: 
+%   a[1]        semi-major axis                       [ km ]
+%   e[1]        eccentricity                          [ - ]
+%   i[1]        inclination                           [ rad ]
 %   RAAN[1]     right ascension of the ascending node [ rad ]
-%   omega[1]    argument of perigee [ rad ]
-%   f[1]        true anomaly        [ rad ]
-%   mu[1]      gravitational paramer [ km^3/s^2 ]
+%   omega[1]    argument of perigee                   [ rad ]
+%   f[1]        true anomaly                          [ rad ]
+%   mu[1]      gravitational paramer                  [ km^3/s^2 ]
 %
 % OUTPUT:
-%   r_vec[3]   position vector     [ km ]
-%   v_vec[3]   velocity vector     [ km/s ]
+%   r_vec[3]   position vector                        [ km ]
+%   v_vec[3]   velocity vector                        [ km/s ]
 %   
 % CONTRIBUTORS:
 %   Davide Demartini
@@ -31,13 +31,13 @@ function [r_vec,v_vec] = kep2car(a,e,i,RAAN,omega,f,mu)
 
 % Rotation Matrixes
 
-% rotation around K of an angle RAAN
+% Rotation around K of an angle RAAN
 
 R_RAAN=[cos(RAAN)   sin(RAAN) 0
         -sin(RAAN)  cos(RAAN) 0
          0          0         1];
 
-% rotation around the line of nodes of an angle i
+% Rotation around the line of nodes of an angle i
 R_i=[1 0 0;
     0 cos(i) sin(i)
     0 -sin(i) cos(i)]; 
