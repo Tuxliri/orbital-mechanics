@@ -1,5 +1,4 @@
-  
-function [alpha, delta, lon, lat] = GroundTrack(state_vec,gw_lon0,t,omega_e,mu,t0);
+function [alpha, delta, lon, lat] = groundtrack(state_vec,gw_lon0,t,omega_e,mu,t0)
 %  function groundTrack that computes the ground track
 %  of an orbit
 %
