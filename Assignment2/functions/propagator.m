@@ -1,5 +1,5 @@
 function [r,v,eps] = propagator(r0,v0,mu,tspan)
-% PROPAGATOR function that predicts body’s orbital characteristics 
+% PROPAGATOR function that predicts body's orbital characteristics 
 %   at a future date given the current orbital characteristics.
 %   
 % PROTOTYPE:
@@ -41,6 +41,7 @@ x0 = [r0(1) v0(1) r0(2) v0(2) r0(3) v0(3)];
 r = [x(:,1) x(:,3) x(:,5)];                           % Radiuses        [ km ]
 v = [x(:,2) x(:,4) x(:,6)];                           % Velocities      [ km/s ]
 eps = zeros(1,length(v));
+
 for i=1:length(v)
     eps(i) = 0.5*(norm(v(i,:)))^2 - mu/norm(r(i,:));  % Specific Energy [km^2/s^2]
 end
