@@ -1,4 +1,4 @@
-function [r,v] = propagator_j2_SRP(r0,v0,mu,tspan,J2, R_E)
+function [r,v] = propagator_j2_SRP(r0,v0,mu,tspan,J2, R_E,date0)
 % PROPAGATOR function that predicts body’s orbital characteristics 
 %                   at a future date given the current orbital 
 %                   characteristics.
@@ -35,7 +35,7 @@ y0 = [ r0(1) v0(1) r0(2) v0(2) r0(3) v0(3) ];
 
 %% Compute the integration of the ode
 
-[t, y] = ode113(@(t,y) twobodyode_j2(t,y,mu,J2,R_E), tspan, y0, opts);
+[t, y] = ode113(@(t,y) twobodyode_j2_SRP(t,y,mu,J2,R_E,date0), tspan, y0, opts);
 
 %% Calculate numerically the velocities, radiuses and specific energy
 

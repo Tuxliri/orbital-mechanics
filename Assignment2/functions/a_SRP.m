@@ -1,4 +1,4 @@
-function a = a_SRP_RSW(s,Cr,Psr,R_E,Am,mjd2000)
+function [a_RSW, a_ECI] = a_SRP(s,Cr,Psr,R_E,Am,mjd2000)
 %a_SRP_RSW this function calculates the acceleration in the RSW
 %   (Radial-transveral-out of plane) reference frame, returning a vector of
 %   the three components
@@ -17,7 +17,7 @@ function a = a_SRP_RSW(s,Cr,Psr,R_E,Am,mjd2000)
 %   mjd2000[1]  mjd2000 date                        [-]
 %
 % OUTPUT:
-%   a[3]        vector of perturbing accelerations [ar,as,aw]       [km/s^2]
+%   a[3x1]        vector of perturbing accelerations [ar,as,aw]       [km/s^2]
 %
 % CONTRIBUTORS:
 %   Davide Iafrate      14-12-2020
@@ -52,15 +52,15 @@ epsilon = astroConstants(8);
 ROT = [cos(epsilon) sin(epsilon) 0;
                   -sin(epsilon) cos(epsilon) 0;
                    0    0   1;];
-rE = ROT*rE;
+rE = ROT*(rE');
 
 % Get position vector R-sc-sun
-R_sc_sun = - (rE + rSC);
+R_sc_sun = - (rE + rSC');
 
 %% IMPROVEMENT/NEEDED: IMPLEMENT ECLIPSE CONDITION!!!
 
 %  Calculate the vector of acceleration in the RSW frame
-a_SRP_ECI = - Psr * AU^2 / norm(R_sc_sun)^3 * Cr * Am * R_sc_sun;
+a_ECI = - Psr * AU^2 / norm(R_sc_sun)^3 * Cr * Am * R_sc_sun;
 
 % Convert to the RSW reference frame
 
@@ -68,7 +68,7 @@ r_vers = rSC/norm(rSC);
 w_vers = cross(rSC,vSC)./norm(cross(rSC,vSC));
 s_vers = cross(w_vers,r_vers);
 
-a = [r_vers' s_vers' w_vers']' * a_SRP_ECI;
+a_RSW = [r_vers' s_vers' w_vers']' * a_ECI;
 
 end
 
