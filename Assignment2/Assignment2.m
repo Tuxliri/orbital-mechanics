@@ -116,12 +116,6 @@ f0 = kep0(6);
 %% Solve with the cartesian elements
 [ri, vi] = propagator_j2_SRP(r0,v0,muE,tspan,J2,R_E,date0);
 
-% y0 = [r0(1); v0(1); r0(2); v0(2); r0(3); v0(3)];
-%
-% opts = odeset('Reltol',1e-13,'Stats','on');
-% [tB, y] = ode113(@(t,y) twobodyode_j2_SRP(t,y,muE,J2,R_E), tspan,y0,opts);
-% % [tB, y] = ode113(@(t,y) twobodyode_j2_SRP(t,y,muE,J2,R_E), tspan,y0,opts);
-
 % Convert cartesian to keplerian
 kepB = zeros(length(ri(:,1)),6);
 for i = 1:length(ri(:,1))
@@ -142,11 +136,13 @@ kep_filtered = movmean( kep_gauss,nwindow,1);
 
 %% Compare the two solutions through plotting
 figure(2)
-% IMPROVEMENTS:
-%  use Q = unwrap(P,tol,dim)
 
-kepB(:,3:6) = unwrap(kepB(:,3:6),[],1);
+% Add a gap to cartesian elements to avoid numerical problems
+kepB(:,3:5) = unwrap(kepB(:,3:5),[],1);
+kepB(5:end,6) = unwrap(kepB(5:end,6),[],1);
+
 kep_gauss(:,3:6) = unwrap(kep_gauss(:,3:6),[],1);
+
 kep_filtered(:,3:6) = unwrap(kep_filtered(:,3:6),[],1);
 
 kepB(:,3:6) = rad2deg(kepB(:,3:6));
