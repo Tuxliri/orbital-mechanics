@@ -49,9 +49,9 @@ AU = astroConstants(2);
 % to the negative inclination of the spin axis of the Earth
 
 epsilon = astroConstants(8);
-ROT = [cos(epsilon) sin(epsilon) 0;
-                  -sin(epsilon) cos(epsilon) 0;
-                   0    0   1;];
+ROT = [1 0 0;
+       0 cos(epsilon) -sin(epsilon);
+       0 sin(epsilon) cos(epsilon);];
 rE = ROT*(rE');
 
 % Get position vector R-sc-sun
@@ -59,8 +59,21 @@ R_sc_sun = - (rE + rSC');
 
 %% IMPROVEMENT/NEEDED: IMPLEMENT ECLIPSE CONDITION!!!
 
-%  Calculate the vector of acceleration in the RSW frame
-a_ECI = - Psr * AU^2 / norm(R_sc_sun)^3 * Cr * Am * R_sc_sun;
+% ECLIPSE CHECK algorithm from curtis page 526
+% Vector from Earth to sun is opposite of vecotr from Sun to Earth
+rS = -rE;
+theta = acos(dot(rS,rSC)/(norm(rS)*norm(rSC)));
+theta_1 = acos(R_E/norm(rSC));
+theta_2 = acos(R_E/norm(rS));
+if theta_1+theta_2 < theta
+    vi = 0;
+else
+    vi=1;
+end
+
+%  Calculate the vector of acceleration in the RSW frame AND CONVERT FROM
+%  m/s to km/s for the propagators
+a_ECI = - vi*Psr * AU^2 / norm(R_sc_sun)^3 * Cr * Am * R_sc_sun * 1e-3;
 
 % Convert to the RSW reference frame
 
