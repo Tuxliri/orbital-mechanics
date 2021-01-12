@@ -27,11 +27,11 @@ Mercury.Color = [210,210,210]./255;
 
 %% Setting Constraints
 min_tdep = date2mjd2000([2031 02 01 00 00 00]);
-min_tarr = date2mjd2000([2050 02 01 00 00 00]);
-min_tGA = date2mjd2000([2049 02 01 00 00 00]);
+min_tarr = date2mjd2000([2043 03 01 00 00 00]);
+min_tGA = date2mjd2000([2043 02 01 00 00 00]);
 
-max_tdep = date2mjd2000([2034 02 01 00 00 00]);
-max_tGA = date2mjd2000([2069 02 01 00 00 00]);
+max_tdep = date2mjd2000([2058 02 01 00 00 00]);
+max_tGA = date2mjd2000([2070 02 01 00 00 00]);
 max_tarr = date2mjd2000([2071 02 01 00 00 00]);
 
 % Minimum radius of perigee at flyby, sum of radius of the planet and of the atmosphere [km]
@@ -93,7 +93,8 @@ objfun = @(x) GAtransfer(Neptune,Venus,Mercury,x(1),x(2),x(3));
 nonlincon = @(x) flyby_CONSTR(Neptune,Venus,Mercury,x(1),x(2),x(3),rpmin);
 
 %% Constrained optimization function
-options = optimoptions('fmincon','OptimalityTolerance',1e-12,'StepTolerance',1e-12);
+options = optimoptions('fmincon','OptimalityTolerance',1e-12,'StepTolerance',1e-12,'MaxFunctionEvaluations',3000, ...
+'MaxIterations',1000    );
 x_PERF = fmincon(@(x) objfun(x),x_GRID,A,b,Aeq,beq,lb,ub,nonlincon);
 
 %% Genetic algorithm function

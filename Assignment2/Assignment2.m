@@ -10,7 +10,8 @@ addpath(genpath('functions\'));
 addpath(genpath('../Common\'));
 
 %% Assigned orbit parameters
-selection = 2;
+selection = 1;
+
 switch selection
     case 1
         a = 40718;		% [km]	semi-major axis
@@ -48,6 +49,7 @@ J2 = const(3);					% second zonal armonic of earth         [ - ]
 omega_e = deg2rad(15.04)/3600;  % angular velocity of Earth's rotation  [ rad/s ]
 gw_longitude0 = 0;              % longitude of greenwhich   [ rad ] IMPROVEMENT:
                                 % WE CAN GET IT FROM DATE0
+                                
 date0 = [2021 01 01 00 00 00];  % Initial date at time t=0
 
 %% Calculate the semi-major axis of the repeating ground track
@@ -108,11 +110,12 @@ legend ('Original', 'Start', 'End','Repeating Ground track', 'Start', 'End', 'Re
 kep0 = [a e i RAAN omega f0];
 t0 = 0;
 Torb = 2*pi/sqrt(muE/kep0(1)^3);
-tspan = t0:1:500*Torb;
+tspan = t0:1:400*Torb;
 
-% Get the perturbed orbital elements
+%% Get the perturbed orbital elements
 [t_gauss,kep_gauss] = ORBITPROPAGATOR(t0,kep0,tspan,date0);
 
+tStart = tic;
 % Extract initial orbital elements
 a0 = kep0(1);
 e0 = kep0(2);
@@ -124,8 +127,11 @@ f0 = kep0(6);
 % Initial cartesian elements
 [r0, v0] =  kep2car(a0,e0,i0,RAAN0,omega0,f0,muE);
 
+tGAUSS = toc(tStart);
  
 %% Solve with the cartesian elements
+tStart = tic;
+
 [ri, vi] = propagator_j2_SRP(r0,v0,muE,tspan,J2,R_E,date0);
 
 % Convert cartesian to keplerian
@@ -134,6 +140,8 @@ for i = 1:length(ri(:,1))
   
     [kepB(i,1),kepB(i,2),kepB(i,3),kepB(i,4),kepB(i,5),kepB(i,6)] = car2kep(ri(i,:),vi(i,:),muE);
 end
+
+tCART = toc(tStart);
 
 %% Filtering lower frequencies
 
@@ -160,6 +168,8 @@ kep_filtered(:,3:6) = unwrap(kep_filtered(:,3:6),[],1);
 kepB(:,3:6) = rad2deg(kepB(:,3:6));
 kep_gauss(:,3:6) = rad2deg(kep_gauss(:,3:6));
 kep_filtered(:,3:6) = rad2deg(kep_filtered(:,3:6));
+
+LINEWIDTH = 2;
 
 % Semi-major axis
 subplot(2,3,1)
@@ -269,6 +279,7 @@ KEP(5:end,6) = unwrap(KEP(5:end,6),[],1);
 KEP(:,3:6) = rad2deg(KEP(:,3:6));
 % Semi-major axis
 subplot(2,3,1)
+
 plot(datenum(DATES),KEP(:,1));
 legend('TLEs')
 grid on
