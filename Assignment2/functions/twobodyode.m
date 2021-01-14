@@ -1,8 +1,8 @@
-function dy = twobodyode_j2_SRP(t,y,mu,J2,R_e,date0,Cr,Psr,Am)
+function dy = twobodyode(t,y,mu,J2,R_e,date0,Cr,Psr,Am)
 % Restructed two body problem ODE function with optional parameters for J2
 % effect and SRP perturbation
-% J2: optional parameters [J2,R_e]
-% J2+SRP: optional parameters [J2,R_e,date0,Cr,Psr,Am]
+% J2: necessary parameters [J2,R_e]
+% J2+SRP: necessary parameters [J2,R_e,date0,Cr,Psr,Am]
 % 
 % PROTOTYPE:
 %   dy = twobodyode(t,y)
@@ -27,7 +27,7 @@ function dy = twobodyode_j2_SRP(t,y,mu,J2,R_e,date0,Cr,Psr,Am)
 %
 % VERSIONS
 %   2020-09-24: First version
-%   2021-01-14: Second version
+%   2021-01-14: Implemented optional parameters
 %
 
 DAY2SECS = 24*3600;
@@ -40,15 +40,15 @@ v_vec = y(2:2:6);
 
 [s(1),s(2),s(3),s(4),s(5),s(6)] = car2kep(r_vec,v_vec,mu);
 
+% Check if J2 arguments are passed
 if nargin == 3
     J2 = 0;
     R_e = 0;
-    a_ECI = [0 0 0];
     
 end
     
 % Perform check on SRP required
-if nargin == 7
+if nargin == 9
     mjd2000_0 = date2mjd2000(date0);
     
     % Calculate the acceleration in the ECI frame

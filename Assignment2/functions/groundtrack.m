@@ -1,9 +1,9 @@
-function [alpha, delta, lon, lat] = groundtrack_J2(state_vec, gw_longitude0, t, omega_e, mu, t0,j2,R_e)
+function [alpha, delta, lon, lat] = groundtrack(state_vec, gw_longitude0, t, omega_e, mu, t0,J2,R_E)
 %  function groundTrack that computes the ground track
 %  of an orbit
 %
 % PROTOTYPE:
-%    [alpha, delta, lon, lat] = groundtrack(state_vec, gw_longitude, t, omega_e, mu, t0);
+%    [alpha, delta, lon, lat] = groundtrack(state_vec, gw_longitude, t, omega_e, mu, t0,J2,R_E);
 %   
 % INPUT:
 %   state_vec[2 | 6]        Cartesian or keplerian elements at initial time [ - ]
@@ -28,7 +28,7 @@ function [alpha, delta, lon, lat] = groundtrack_J2(state_vec, gw_longitude0, t, 
 %   mu[1]       Gravitational paramer         [ km^3/s^2 ]
 %   t0[1]       Initial time                  [ s ]
 %   J2[1]       Second zonal harmonic         [-]
-%   R_e[1]      Equatorial radius of Earth    [km]
+%   R_R[1]      Equatorial radius of Earth    [km]
 %
 % OUTPUT:
 %   alpha[1]   right ascension in Earth Centered Equatorial Inertial frame     [ rad ]
@@ -42,6 +42,7 @@ function [alpha, delta, lon, lat] = groundtrack_J2(state_vec, gw_longitude0, t, 
 %
 % VERSIONS
 %   2020-10-16: First version
+%   2021-01-14: Implemented optional parameters
 %
 
 %% check if the initial state vector is given in Cartesian or Keplerian elements
@@ -62,9 +63,15 @@ else
 end
 
 %% Orbit propagation
+if nargin == 6
+    
+    [r,~] = propagator(r0,v0,mu,t);
+    
+elseif nargin == 8
+     
+    [r,~] = propagator(r0,v0,mu,t,J2,R_E);
 
-[r,~] = propagator(r0,v0,mu,t,j2,R_e);
-
+end
 % Conversion to RA and declination
 [delta, alpha] = r2RAdelta(r);
 

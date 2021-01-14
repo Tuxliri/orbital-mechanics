@@ -9,6 +9,8 @@ path(pathdef);
 addpath(genpath('functions\'));
 addpath(genpath('../Common\'));
 
+% Conversion constants
+DAY2SECS=24*3600;
 
 % DATA
 
@@ -19,9 +21,11 @@ J2 = const(3);					% second zonal armonic of earth         [ - ]
 omega_e = deg2rad(15.04)/3600;  % angular velocity of Earth's rotation  [ rad/s ]
 gw_longitude0 = 0;              % longitude of greenwhich   at time t0  [ rad ] 
 Psr = 4.56e-6;                  % Solar radiation pressure at 1AU           [N/m^2]
+NDAYS = 1200;                      % Number of days to propagate for perturbations [days]
+
 
 %% Assigned orbit parameters
-selection = 2;
+selection = 3;
 
 switch selection
     case 1
@@ -31,7 +35,14 @@ switch selection
         RAAN = deg2rad(0);
         omega = deg2rad(40);
         f0 = deg2rad(0);
+        hp = 15566.491;	% [km]	height of perigee
+        t0 = 0;
+        k = 1;
+        m = 1;
+        periods = 4;               % number of periods to plot
+
         date0 = [2021 01 01 00 00 00];  % Initial date at time t=0
+        
         % SRP perturbation data
         Cr = 1.2;		% [-] reflectivity coefficient
         Am = 4;			% [m^2/kg] area-to-mass ratio
@@ -46,21 +57,20 @@ switch selection
         omega = deg2rad(227.493);
         f0 = deg2rad(343.427);
         date0 = jd2date(2438400.5);  % Initial date at time t=0
-        
+        k = 1;
+        m = 1;
+        periods = 4;               % number of periods to plot
+
         J2 = 0;                      % Overwrite J2 coefficient to test SRP
+        t0 = 0;
+        
         % model
         
         % SRP perturbation data
         Cr = 2;		% [-] reflectivity coefficient
         Am = 2;			% [m^2/kg] area-to-mass ratio
-        
-        
 end
 
-hp = 15566.491;	% [km]	?height of perigee?
-k = 1;
-m = 1;
-periods = 1;               % number of periods to plot
 
 %% Calculate the semi-major axis of the repeating ground track
 
@@ -68,14 +78,14 @@ a_repeating = repeating_ground_track(m,k,muE,omega_e);
 
 %% Calculate the semi-major axis of the perturbed repeating ground track
 
-a_secular = repeating_ground_track_J2(m, k, muE, omega_e, J2, R_E, e, i);
+a_secular = repeating_ground_track(m, k, muE, omega_e, J2, R_E, e, i);
 
 %% Create the state vectors from orbital parameters
 
 % calculate the orbital periods
-T = 2*pi*sqrt(a^3/muE);                    % Original
-T_repeating = 2*pi*sqrt(a_repeating^3/muE);            % Repeating ground track
-T_secular = 2*pi*sqrt(a_secular^3/muE);    % Repeating secular ground track for the perturbed secular orbit
+T = 2*pi*sqrt(a^3/muE);                         % Original
+T_repeating = 2*pi*sqrt(a_repeating^3/muE);     % Repeating ground track
+T_secular = 2*pi*sqrt(a_secular^3/muE);         % Repeating secular ground track for the perturbed secular orbit
 
 %% Create time vectors
 
@@ -91,13 +101,13 @@ state_vec_secular = [a_secular e i RAAN omega f0];   % Repeating ground track fo
 
 %% Compute RA, declination, lon and latitude
 % Original
-[alpha, delta, lon, lat] = groundtrack(state_vec, gw_longitude0, t, omega_e, muE, 0);
+[alpha, delta, lon, lat] = groundtrack(state_vec, gw_longitude0, t, omega_e, muE, t0);
 
-% Repeating ground track
-[alpha_repeating, delta_repeating, lon_repeating, lat_repeating] = groundtrack(state_vec_repeating, gw_longitude0, t_repeating, omega_e, muE, 0);
+% Repeating unperturbed ground track
+[alpha_repeating, delta_repeating, lon_repeating, lat_repeating] = groundtrack(state_vec_repeating, gw_longitude0, t_repeating, omega_e, muE, t0);
 
 % Repeating perturbed ground track
-[alpha_secular, delta_secular, lon_secular, lat_secular] = groundtrack_J2(state_vec_secular,gw_longitude0,t_secular,omega_e, muE,0, J2, R_E);
+[alpha_secular, delta_secular, lon_secular, lat_secular] = groundtrack(state_vec_secular,gw_longitude0,t_secular,omega_e, muE,t0, J2, R_E);
 
 %% Plotting of the groundtracks
 
@@ -118,51 +128,41 @@ legend ('Original', 'Start', 'End','Repeating Ground track', 'Start', 'End', 'Re
 
 % Initial conditions
 kep0 = [a e i RAAN omega f0];
-t0 = 0;
-Torb = 2*pi/sqrt(muE/kep0(1)^3);
-DAY2SECS=24*3600;
-tspan = t0:100:1200*DAY2SECS;
+tspan = t0:100:NDAYS*DAY2SECS;
 
 %% Get the perturbed orbital elements
 [t_gauss,kep_gauss] = ORBITPROPAGATOR(t0,kep0,tspan,date0,J2,Cr,Psr,Am);
 
 tStart = tic;
 
-% Extract initial orbital elements
-a0 = kep0(1);
-e0 = kep0(2);
-i0 = kep0(3);
-RAAN0 = kep0(4);
-omega0 = kep0(5);
-f0 = kep0(6);
-
 % Initial cartesian elements
-[r0, v0] =  kep2car(a0,e0,i0,RAAN0,omega0,f0,muE);
+[r0, v0] =  kep2car(a,e,i,RAAN,omega,f0,muE);
 
+
+% Find out how much time the gaussian propagation took
 tGAUSS = toc(tStart);
 
 %% Solve with the cartesian elements
 kepB = zeros(length(tspan),6);
 
-
 tStart = tic;
 
-[ri, vi] = propagator_j2_SRP(r0,v0,muE,tspan,J2,R_E,date0,Cr,Psr,Am);
+[ri, vi] = propagator(r0,v0,muE,tspan,J2,R_E,date0,Cr,Psr,Am);
 
 % Convert cartesian to keplerian
-
 for i = 1:length(ri(:,1))
     
     [kepB(i,1),kepB(i,2),kepB(i,3),kepB(i,4),kepB(i,5),kepB(i,6)] = car2kep(ri(i,:),vi(i,:),muE);
 end
 
+% Find out how much time the cartesian propagation took
 tCART = toc(tStart);
 
 
 %% Filtering lower frequencies
 
 % Cut-off period
-Tfilter = 3*Torb;
+Tfilter = 3*T;
 
 % Number of points for the filtering window
 nwindow = nearest( Tfilter / (sum(diff(t_gauss)) / (numel(t_gauss)-1) ) );
@@ -189,10 +189,11 @@ kep_filtered(:,3:6) = rad2deg(kep_filtered(:,3:6));
 
 tspan = tspan./DAY2SECS;
 LINEWIDTH = 2;
+
 %% Plotting
 % Semi-major axis
 subplot(2,3,1)
-plot(tspan,kep_gauss(:,1)-a0,tspan,kepB(:,1)-a0,tspan,kep_filtered(:,1)-a0);
+plot(tspan,kep_gauss(:,1)-a,tspan,kepB(:,1)-a,tspan,kep_filtered(:,1)-a);
 legend('Gauss equations','Cartesian','Secular (filtered)')
 grid on
 xlabel('${time [days]}$','Interpreter', 'latex','Fontsize', 14)
@@ -200,7 +201,7 @@ ylabel('$\mathbf{a [Km]}$','Interpreter', 'latex','Fontsize', 14)
 
 % Eccentricity
 subplot(2,3,2)
-plot(tspan,kep_gauss(:,2)-e0,tspan,kepB(:,2)-e0,tspan,kep_filtered(:,2)-e0);
+plot(tspan,kep_gauss(:,2)-e,tspan,kepB(:,2)-e,tspan,kep_filtered(:,2)-e);
 legend('Gauss equations','Cartesian','Secular (filtered)')
 grid on
 xlabel('${time [days]}$','Interpreter', 'latex','Fontsize', 14)
@@ -217,7 +218,7 @@ ylabel('$\mathbf{i [deg]}$','Interpreter', 'latex','Fontsize', 14)
 
 % RAAN
 subplot(2,3,4)
-plot(tspan,kep_gauss(:,4)-rad2deg(RAAN0),tspan,kepB(:,4)-rad2deg(RAAN0),tspan,kep_filtered(:,4)-rad2deg(RAAN0));
+plot(tspan,kep_gauss(:,4)-rad2deg(RAAN),tspan,kepB(:,4)-rad2deg(RAAN),tspan,kep_filtered(:,4)-rad2deg(RAAN));
 legend('Gauss equations','Cartesian','Secular (filtered)')
 grid on
 xlabel('${time [days]}$','Interpreter', 'latex','Fontsize', 14)

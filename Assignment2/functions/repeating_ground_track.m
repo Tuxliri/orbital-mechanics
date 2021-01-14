@@ -1,4 +1,4 @@
-function a = repeating_ground_track_J2(m, k, mu, omega_e, J2,R_e, e, i)
+function a = repeating_ground_track(m, k, mu, omega_e, J2,R_e, e, i)
 % REPEATING_GROUND_TRACK function that computes the required a (semi-major axis)
 %   for a repeating ground track with k satellite revolutions and m Earth
 %   revolutions, with the option of accounting for the SECULAR PERTURBATIONS due to J2
