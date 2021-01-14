@@ -1,4 +1,4 @@
-function [r,v] = propagator_j2_SRP(r0,v0,mu,tspan,J2, R_E,date0)
+function [r,v] = propagator_j2_SRP(r0,v0,mu,tspan,J2, R_E,date0,Cr,Psr,Am)
 % PROPAGATOR function that predicts body’s orbital characteristics 
 %                   at a future date given the current orbital 
 %                   characteristics.
@@ -14,6 +14,9 @@ function [r,v] = propagator_j2_SRP(r0,v0,mu,tspan,J2, R_E,date0)
 %                    be computed                       [ s ]
 %   J2[1]      Second zonal harmonic                   [-]
 %   R_E[1]     Equatorial radius of Earth              [km]
+%   Cr[1]      reflectivity coefficient                  [-]
+%   Psr[1]     Solar radiation pressure at 1AU           [N/m^2]
+%   Am[1]      Area to mass ratio of the spacecraft      [m^2/km]
 %
 % OUTPUT:
 %   r [ n x 3]      Position vector computed at each time of the tspan 
@@ -28,14 +31,14 @@ function [r,v] = propagator_j2_SRP(r0,v0,mu,tspan,J2, R_E,date0)
 %   2020-10-16: First version
 %
 %% Set options for ODE solver
-opts = odeset('Reltol',1e-13,'AbsTol',1e-14,'Stats','on');
+opts = odeset('Reltol',1e-13,'AbsTol',1e-14,'Stats','off');
 
 %% Initial state vector
 y0 = [ r0(1) v0(1) r0(2) v0(2) r0(3) v0(3) ];   
 
 %% Compute the integration of the ode
 
-[t, y] = ode113(@(t,y) twobodyode_j2_SRP(t,y,mu,J2,R_E,date0), tspan, y0, opts);
+[t, y] = ode113(@(t,y) twobodyode_j2_SRP(t,y,mu,J2,R_E,date0,Cr,Psr,Am), tspan, y0, opts);
 
 %% Calculate numerically the velocities, radiuses and specific energy
 

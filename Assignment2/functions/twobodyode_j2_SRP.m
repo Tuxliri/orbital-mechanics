@@ -1,4 +1,4 @@
-function dy = twobodyode_j2_SRP(t,y,mu,J2,R_e,date0)
+function dy = twobodyode_j2_SRP(t,y,mu,J2,R_e,date0,Cr,Psr,Am)
 % Restructed two body problem ODE function
 % 
 % PROTOTYPE:
@@ -11,6 +11,9 @@ function dy = twobodyode_j2_SRP(t,y,mu,J2,R_e,date0)
 %   mu[1]      Planetary constant                               [L^3/T^2]
 %   J2[1]      Second zonal harmonic                            [-]
 %   R_e[1]     Equatorial radius of Earth                       [km]
+%   Cr[1]      reflectivity coefficient                  [-]
+%   Psr[1]     Solar radiation pressure at 1AU           [N/m^2]
+%   Am[1]      Area to mass ratio of the spacecraft      [m^2/km]
 %
 % OUTPUT:
 %   dy[6x1]         Derivative of the state [L, L/T]
@@ -23,11 +26,6 @@ function dy = twobodyode_j2_SRP(t,y,mu,J2,R_e,date0)
 %
 
 DAY2SECS = 24*3600;
-
-% Spacecraft characteristics
-Cr = 1.2;                       % [-]
-Psr = 4.5e-6;                   % [N/m^2]   at 1AU
-Am = 4;                         % [m^2/km]
 
 % Calculate radius
 r = norm(y(1:2:6));
@@ -44,6 +42,7 @@ v_vec = y(2:2:6);
 
 mjd2000_0 = date2mjd2000(date0);
 
+% Calculate the acceleration in the ECI frame
 [~,a_ECI] = a_SRP(s,Cr,Psr,R_e,Am,mjd2000_0 + t / DAY2SECS);
 
 % Set the derivatives of the state

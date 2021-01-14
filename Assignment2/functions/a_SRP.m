@@ -17,7 +17,8 @@ function [a_RSW, a_ECI] = a_SRP(s,Cr,Psr,R_E,Am,mjd2000)
 %   mjd2000[1]  mjd2000 date                        [-]
 %
 % OUTPUT:
-%   a[3x1]        vector of perturbing accelerations [ar,as,aw]       [km/s^2]
+%   a_RSW[3x1]        vector of perturbing accelerations [ar,as,aw]       [km/s^2]
+%   a_[3x1]        vector of perturbing accelerations [ar,as,aw]       [km/s^2]
 %
 % CONTRIBUTORS:
 %   Davide Iafrate      14-12-2020
@@ -33,7 +34,9 @@ f = s(6);
 % Calculate the radius of the S/C wrt to sun in the Inertial frame:
 % VECTORIAL SUM: R_sc-sun = - (R_sun-e + R_e-sc
 
-% Get keplerian elements of the Earth
+% Get keplerian elements of the Earth in Sun-centred ecliptic 
+%     system
+
 [kepSun,muSun] = uplanet(mjd2000, 3); 
 muE = astroConstants(13);
 AU = astroConstants(2);
@@ -49,19 +52,27 @@ AU = astroConstants(2);
 % to the negative inclination of the spin axis of the Earth
 
 epsilon = astroConstants(8);
+
+% Vector from Earth to Sun in sun-centered ecliptic frame
+rS = -rE;
+
 ROT = [1 0 0;
        0 cos(epsilon) -sin(epsilon);
        0 sin(epsilon) cos(epsilon);];
-rE = ROT*(rE');
+   
+% Vector in ECI coordinates
+
+rS = ROT*(rS');
 
 % Get position vector R-sc-sun
-R_sc_sun = - (rE + rSC');
+% R_sc_sun = -(rE + rSC');
 
 %% IMPROVEMENT/NEEDED: IMPLEMENT ECLIPSE CONDITION!!!
 
 % ECLIPSE CHECK algorithm from curtis page 526
 % Vector from Earth to sun is opposite of vecotr from Sun to Earth
-rS = -rE;
+% rS = -rE;
+
 theta = acos(dot(rS,rSC)/(norm(rS)*norm(rSC)));
 theta_1 = acos(R_E/norm(rSC));
 theta_2 = acos(R_E/norm(rS));
@@ -73,7 +84,8 @@ end
 
 %  Calculate the vector of acceleration in the RSW frame AND CONVERT FROM
 %  m/s to km/s for the propagators
-a_ECI = - vi*Psr * AU^2 / norm(R_sc_sun)^3 * Cr * Am * R_sc_sun * 1e-3;
+% a_ECI = - vi*Psr * AU^2 / norm(R_sc_sun)^3 * Cr * Am * R_sc_sun /1000;
+a_ECI = - vi*Psr * AU^2 / norm(rS)^3 * Cr * Am * rS /1000;
 
 % Convert to the RSW reference frame
 
