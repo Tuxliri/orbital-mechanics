@@ -32,6 +32,7 @@ delta = acos(dot(vinfM,vinfP)/(vinfm*vinfp));
 
 %% FIX: USE FLYBY-UNPOW?
 if delta < 1e-6
+    
     dv_p=0;
     delta=0;
     a=0;

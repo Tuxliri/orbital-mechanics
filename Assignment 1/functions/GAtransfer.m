@@ -42,11 +42,11 @@ function [DV, DV_dep, DV_arr, FLYBY,TRANSFER1,TRANSFER2]...
 muSun = astroConstants(4);
 
 % Compute the positions and velocities of the planet with the ephemeris
-[kepA, r_A, v_A] = ephemeris(t_dep,planetA.ID);
+[~, r_A, v_A] = ephemeris(t_dep,planetA.ID);
 
-[kepB, r_B, v_B] = ephemeris(t_ga,planetB.ID);   % Orbital radius of the GA planet
+[~, r_B, v_B] = ephemeris(t_ga,planetB.ID);   % Orbital radius of the GA planet
 
-[kepC, r_C, v_C] = ephemeris(t_arr,planetC.ID);
+[~, r_C, v_C] = ephemeris(t_arr,planetC.ID);
 
 %% Calculate the first transfer arc and the cost in deltav to depart from 
 %  the initial orbit of the planet to the transfer orbit
