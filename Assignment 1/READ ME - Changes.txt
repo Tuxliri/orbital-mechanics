@@ -1,0 +1,4 @@
+Changes:
+1) GAtransfer has 1 more output: DV_ga is also displayable now. Correct your code if necessary;
+2) In the main script there are two commented sections: the genetic algoritm paragraph and the second for cycle for transfer window computation. The latter is useless. We need to decide;
+3) Missing documentation for fliby_CONSTR. Need to add before sending to professor;

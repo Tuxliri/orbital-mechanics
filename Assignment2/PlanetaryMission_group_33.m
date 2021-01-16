@@ -214,7 +214,8 @@ kep_filtered = movmean( kep_gauss,nwindow,1);
 
 figure(2)
 
-% Add a gap to cartesian elements to avoid numerical problems
+% Add a little gap to cartesian elements to avoid numerical problems
+
 kepB(:,3:5) = unwrap(kepB(:,3:5),[],1);
 kepB(5:end,6) = unwrap(kepB(5:end,6),[],1);
 
@@ -236,7 +237,7 @@ plot(tspan,kep_gauss(:,1)-a,tspan,kepB(:,1)-a,tspan,kep_filtered(:,1)-a);
 legend('Gauss equations','Cartesian','Secular (filtered)')
 grid on
 xlabel('${time [days]}$','Interpreter', 'latex','Fontsize', 14)
-ylabel('$\mathbf{a [Km]}$','Interpreter', 'latex','Fontsize', 14)
+ylabel('$\mathbf{a-a_0 [Km]}$','Interpreter', 'latex','Fontsize', 14)
 
 % Eccentricity
 subplot(2,3,2)
@@ -244,16 +245,16 @@ plot(tspan,kep_gauss(:,2)-e,tspan,kepB(:,2)-e,tspan,kep_filtered(:,2)-e);
 legend('Gauss equations','Cartesian','Secular (filtered)')
 grid on
 xlabel('${time [days]}$','Interpreter', 'latex','Fontsize', 14)
-ylabel('$\mathbf{e [-]}$','Interpreter', 'latex','Fontsize', 14)
+ylabel('$\mathbf{e-e_0 [-]}$','Interpreter', 'latex','Fontsize', 14)
 
 
 % inclination
 subplot(2,3,3)
-plot(tspan,kep_gauss(:,3),tspan,kepB(:,3),tspan,kep_filtered(:,3));
+plot(tspan,kep_gauss(:,3)-rad2deg(i),tspan,kepB(:,3)-i,tspan,kep_filtered(:,3)-rad2deg(i));
 legend('Gauss equations','Cartesian','Secular (filtered)')
 grid on
 xlabel('${time [days]}$','Interpreter', 'latex','Fontsize', 14)
-ylabel('$\mathbf{i [deg]}$','Interpreter', 'latex','Fontsize', 14)
+ylabel('$\mathbf{i-i_0 [deg]}$','Interpreter', 'latex','Fontsize', 14)
 
 % RAAN
 subplot(2,3,4)
@@ -265,20 +266,20 @@ ylabel('$\mathbf{\Omega  [deg]}$','Interpreter', 'latex','Fontsize', 14)
 
 % omega
 subplot(2,3,5)
-plot(tspan,kep_gauss(:,5),tspan,kepB(:,5),tspan,kep_filtered(:,5));
+plot(tspan,kep_gauss(:,5)-deg2rad(omega),tspan,kepB(:,5)-deg2rad(omega),tspan,kep_filtered(:,5)-deg2rad(omega));
 legend('Gauss equations','Cartesian','Secular (filtered)')
 grid on
 xlabel('${time [days]}$','Interpreter', 'latex','Fontsize', 14)
-ylabel('$\mathbf{\omega  [deg]}$','Interpreter', 'latex','Fontsize', 14)
+ylabel('$\mathbf{\omega -\omega_0  [deg]}$','Interpreter', 'latex','Fontsize', 14)
 
 
 % f
 subplot(2,3,6)
-plot(tspan,kep_gauss(:,6),tspan,kepB(:,6),tspan,kep_filtered(:,6));
+plot(tspan,kep_gauss(:,6)-deg2rad(f0),tspan,kepB(:,6)-deg2rad(f0),tspan,kep_filtered(:,6)-deg2rad(f0));
 legend('Gauss equations','Cartesian','Secular (filtered)')
 grid on
 xlabel('${time [days]}$','Interpreter', 'latex','Fontsize', 14)
-ylabel('$\mathbf{f  [deg]}$','Interpreter', 'latex','Fontsize', 14)
+ylabel('$\mathbf{f-f_0  [deg]}$','Interpreter', 'latex','Fontsize', 14)
 
 %% Compare the difference between the two solutions through plotting
 figure(3)
@@ -326,63 +327,3 @@ semilogy(tspan,abs(kep_gauss(:,6) - kepB(:,6)) ./ kep0(5));
 grid on
 xlabel('${time [days]}$','Interpreter', 'latex','Fontsize', 14)
 ylabel('${|f_{Car} - f_{Gauss}| / f_{Gauss} [-]}$','Interpreter', 'latex')
-
-%% Plot from TLEs
-% figure(4)
-%
-% [DATES, KEP]=readTLE('debris5.tle', 0);
-%
-% KEP(:,3:5) = unwrap(KEP(:,3:5),[],1);
-% KEP(5:end,6) = unwrap(KEP(5:end,6),[],1);
-%
-% KEP(:,3:6) = rad2deg(KEP(:,3:6));
-% % Semi-major axis
-% subplot(2,3,1)
-%
-% plot(datenum(DATES),KEP(:,1));
-% legend('TLEs')
-% grid on
-% xlabel('${time [T]}$','Interpreter', 'latex','Fontsize', 14)
-% ylabel('$\mathbf{a [Km]}$','Interpreter', 'latex','Fontsize', 14)
-%
-% % Eccentricity
-% subplot(2,3,2)
-% plot(datenum(DATES),KEP(:,2));
-% legend('TLEs')
-% grid on
-% xlabel('${time [T]}$','Interpreter', 'latex','Fontsize', 14)
-% ylabel('$\mathbf{e [-]}$','Interpreter', 'latex','Fontsize', 14)
-%
-%
-% % inclination
-% subplot(2,3,3)
-% plot(datenum(DATES),KEP(:,3));
-% legend('TLEs')
-% grid on
-% xlabel('${time [T]}$','Interpreter', 'latex','Fontsize', 14)
-% ylabel('$\mathbf{i [deg]}$','Interpreter', 'latex','Fontsize', 14)
-%
-% % RAAN
-% subplot(2,3,4)
-% plot(datenum(DATES),KEP(:,4));
-% legend('TLEs')
-% grid on
-% xlabel('${time [T]}$','Interpreter', 'latex','Fontsize', 14)
-% ylabel('$\mathbf{\Omega  [deg]}$','Interpreter', 'latex','Fontsize', 14)
-%
-% % omega
-% subplot(2,3,5)
-% plot(datenum(DATES),KEP(:,5));
-% legend('TLEs')
-% grid on
-% xlabel('${time [T]}$','Interpreter', 'latex','Fontsize', 14)
-% ylabel('$\mathbf{\omega  [deg]}$','Interpreter', 'latex','Fontsize', 14)
-%
-%
-% % f
-% subplot(2,3,6)
-% plot(datenum(DATES),KEP(:,6));
-% legend('TLEs')
-% grid on
-% xlabel('${time [T]}$','Interpreter', 'latex','Fontsize', 14)
-% ylabel('$\mathbf{f  [deg]}$','Interpreter', 'latex','Fontsize', 14)
