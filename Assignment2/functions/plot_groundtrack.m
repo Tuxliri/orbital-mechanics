@@ -30,6 +30,13 @@ end
 lon_wrapped = wrapTo180(rad2deg(lon));
 lat_wrapped = wrapTo180(rad2deg(lat));
 
+% Fill the "HOLE" (turn this off when plotting a short period)
+for j = 2:length(lon_wrapped)
+    if lon_wrapped(j)*lon_wrapped(j-1) < 0
+        lat_wrapped(j) = NaN;
+    end
+end
+
 % Plot the ground track
 plot(lon_wrapped,lat_wrapped,'Color', col, 'linewidth', 2)
 hold on
