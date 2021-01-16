@@ -6,7 +6,7 @@ close all
 %% Set path to default
 path(pathdef);
 % Add [...] folder to path
-addpath(genpath('../functions_assignment\'));
+addpath(genpath('functions\'));
 
 addpath(genpath('../Common\'));
 
