@@ -6,9 +6,9 @@ close all
 %% Set path to default
 path(pathdef);
 % Add [...] folder to path
-addpath(genpath('../functions_assignment\'));
+addpath(genpath('../functions_assignment/'));
 
-addpath(genpath('../Common\'));
+addpath(genpath('../Common/'));
 
 % Upper and lower bounds for the different mission phases
 % x1 = tdep, x2 = tGA, t3 = tarr
