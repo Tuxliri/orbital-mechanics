@@ -1,7 +1,7 @@
-%% Parabolic ToF calculator
 function t_p = parabolicTOF(r1,r2,mu)
 % Quick function to calculate the parabolic ToF between two planets, in the
 % case of Hohmann transfer
+%
 % PROTOTYPE:
 %    t_p = parabolicTOF(r1,r2,mu)
 % 
@@ -22,9 +22,9 @@ function t_p = parabolicTOF(r1,r2,mu)
 % Conversion constant
 SECS2YEARS = 365*24*3600;
 
-c = abs(r1-r2);
-s= (c+r1+r2)/2;
+c = abs(r1 - r2);
+s = (c + r1 + r2)/2;
 
-t_p = sqrt(2)/3*sqrt(s^3/mu)*(1-((s-c)/s)^(3/2));
+t_p = sqrt(2)/3*sqrt(s^3/mu)*(1 - ((s - c)/s)^(3/2));
 
 t_p = t_p/SECS2YEARS;

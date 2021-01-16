@@ -46,13 +46,13 @@ figure(3);
 hold on
 legend on
 TF = plot3(r_TF_ARC1(:,1),r_TF_ARC1(:,2),r_TF_ARC1(:,3), 'LineWidth', 2);
-TF.Color = '#77BC30';
+TF.Color = 'r';
 TF.DisplayName = 'Transfer Arc 1';
 
 hold on
 legend on
 TF = plot3(r_TF_ARC2(:,1),r_TF_ARC2(:,2),r_TF_ARC2(:,3), 'LineWidth', 2);
-TF.Color = '#77AC30';
+TF.Color = 'b';
 TF.DisplayName = 'Transfer Arc 2';
 
 PA_ORBIT = plot3(R_A(:,1),R_A(:,2),R_A(:,3), 'LineWidth', 2) ;  
@@ -103,4 +103,3 @@ xlabel('x')
 ylabel('y')
 zlabel('z')
 end
-
