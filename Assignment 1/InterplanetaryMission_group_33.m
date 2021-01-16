@@ -3,6 +3,13 @@ clc
 clearvars
 close all
 
+%% Set path to default
+path(pathdef);
+% Add [...] folder to path
+addpath(genpath('functions\plots\'));
+addpath(genpath('functions\'));
+addpath(genpath('../Common\'));
+
 %% Problem definition
 Neptune.ID = 8;    % Departure planet
 Venus.ID = 3;      % Gravity assist planet
