@@ -13,9 +13,10 @@ addpath(genpath('../Common\'));
 
 %% Problem definition
 muSun = astroConstants(4);
+AU = astroConstants(2);
 
 Neptune.ID = 8;    % Departure planet
-Venus.ID = 3;      % Gravity assist planet
+Venus.ID = 2;      % Gravity assist planet
 Mercury.ID = 1;    % Arrival planet
 
 Neptune.mu = astroConstants(18);
@@ -28,12 +29,12 @@ Mercury.Color = [210, 210, 210]./255;
 
 %% Setting Constraints
 min_tdep = date2mjd2000([2031 02 01 00 00 00]);
-min_tarr = date2mjd2000([2043 02 01 00 00 00]);
-min_tGA = date2mjd2000([2043 02 01 00 00 00]);
+min_tGA = date2mjd2000([2043 04 20 00 00 00]);
+min_tarr = date2mjd2000([2043 04 28 00 00 00]);
 
-max_tdep = date2mjd2000([2046 02 01 00 00 00]);
-max_tGA = date2mjd2000([2058 02 01 00 00 00]);
-max_tarr = date2mjd2000([2058 02 01 00 00 00]);
+max_tdep = date2mjd2000([2058 11 06 00 00 00]);
+max_tGA = date2mjd2000([2071 01 23 00 00 00]);
+max_tarr = date2mjd2000([2071 02 01 00 00 00]);
 
 % Minimum radius of perigee at flyby, sum of radius of the planet and of the atmosphere
 rpmin = 6300;   % [ km ]
@@ -82,40 +83,6 @@ end
 [ii,jj,kk] = ind2sub(size(DV),loc);
 
 x_GRID = [departure(ii); gravityassist(jj); arrival(kk)];
-
-% %% refining the result (addition)
-% departure_ref = linspace(departure(ii-1),departure(ii+1),100);
-% gravityassist_ref = linspace(gravityassist(jj-1),gravityassist(jj+1),100);
-% arrival_ref = linspace(arrival(kk-1),arrival(kk+1),100);
-% 
-% % preallocation
-% DV_ref = zeros(length(departure_ref),length(gravityassist_ref),length(arrival_ref));
-% for i = 1 : length(departure_ref)
-%     for j = 1:length(gravityassist_ref)
-%         tof_1 = gravityassist_ref(j) - departure_ref(i);
-%         for k = 1:length(arrival_ref)
-%             tof_2 = arrival_ref(k) - gravityassist_ref(j);
-%             %% Set NaN for negative TOFs and rp < rpmin
-%             if  tof_2 < 0 || tof_1 < 0
-%                 DV_ref(i,j,k) = NaN;
-%                 
-%             
-%             else
-%                 [DV_ref(i,j,k), ~, ~, FLYBY,~,~]= GAtransfer(Neptune,Venus,Mercury,departure_ref(i),gravityassist_ref(j),arrival_ref(k));
-%                 if FLYBY.rp < rpmin
-%                     DV_ref(i,j,k) = 1000000;       % Set an impossibly high value
-%                 end
-%              
-%             end
-%         end
-%     end
-% end
-% 
-% [dv_min_grid_ref,loc] = min(DV_ref(:));
-% [ii,jj,kk] = ind2sub(size(DV_ref),loc);
-% 
-% x_GRID = [departure_ref(ii); gravityassist_ref(jj); arrival_ref(kk)];
-
 %% IMPORTANT SETS CONSTRAINTS ON x1<x2<x3 ( as a sys of 3 inequalities)
 % x1<x2 , x2<x3, x1<x3
 
@@ -152,7 +119,7 @@ x_PERF = fmincon(@(x) objfun(x),x_GRID,A,b,Aeq,beq,lb,ub,nonlincon);
 [DV, DV_dep, DV_arr, DV_ga, FLYBY, TRANSFER1, TRANSFER2]...
     = GAtransfer(Neptune, Venus, Mercury, x_PERF(1), x_PERF(2), x_PERF(3));
 
-
-    
+[outputArg1] = assignmentplot(Neptune,Venus,Mercury,x_PERF,TRANSFER1,TRANSFER2);
+  
 % assignmentplot(,x_PERF,TRANSFER1,TRANSFER2)
 % Plot_Celestial_Objects(1,[Neptune.ID,Venus.ID,Mercury.ID],1,x_PERF(1))

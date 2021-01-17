@@ -86,6 +86,12 @@ T = 2*pi*sqrt(a^3/muE);                         % Original
 T_repeating = 2*pi*sqrt(a_repeating^3/muE);     % Repeating ground track
 T_secular = 2*pi*sqrt(a_secular^3/muE);         % Repeating secular ground track for the perturbed secular orbit
 
+%% create state vectors
+
+state_vec = [a e i RAAN omega f0];                   % Original
+state_vec_repeating = [a_repeating e i RAAN omega f0];           % Repeating ground track
+state_vec_secular = [a_secular e i RAAN omega f0];   % Repeating ground track for the perturbed secular orbit
+
 
 %% Create time vectors
 for j = 1 : 3
@@ -105,16 +111,12 @@ for j = 1 : 3
         tEnd2=tEnd1;
         tEnd3=tEnd1;
     end
+    
     t = (0:1:tEnd1);                    	% Original
     t_repeating = (0:1:tEnd2);	% Repeating ground track
     t_secular = (0:1:tEnd3);    	% Repeating secular ground track for the perturbed secular orbit
     
-    %% create state vectors
-    
-    state_vec = [a e i RAAN omega f0];                   % Original
-    state_vec_repeating = [a_repeating e i RAAN omega f0];           % Repeating ground track
-    state_vec_secular = [a_secular e i RAAN omega f0];   % Repeating ground track for the perturbed secular orbit
-    
+
     %% Compute RA, declination, lon and latitude
     % Unperturbed original
     [alpha, delta, lon, lat] = groundtrack(state_vec, gw_longitude0, t, omega_e, muE, t0);
@@ -198,9 +200,6 @@ end
 % Find out how much time the cartesian propagation took
 tCART = toc(tStart);
 
-%% Calculating secular effect
-
-RAAN
 %% Filtering lower frequencies
 
 % Cut-off period
@@ -235,6 +234,7 @@ LINEWIDTH = 2;
 
 %% Plotting
 % Semi-major axis
+figure
 subplot(2,3,1)
 plot(tspan,kep_gauss(:,1)-a,tspan,kepB(:,1)-a,tspan,kep_filtered(:,1)-a);
 legend('Gauss equations','Cartesian','Secular (filtered)')
@@ -285,7 +285,7 @@ xlabel('${time [days]}$','Interpreter', 'latex','Fontsize', 14)
 ylabel('$\mathbf{f-f_0  [deg]}$','Interpreter', 'latex','Fontsize', 14)
 
 %% Compare the difference between the two solutions through plotting
-figure(3)
+figure
 
 % Semi-major axis
 subplot(3,2,1)

@@ -30,7 +30,7 @@ end
 lon_wrapped = wrapTo180(rad2deg(lon));
 lat_wrapped = wrapTo180(rad2deg(lat));
 
-% Fill the "HOLE" (turn this off when plotting a short period)
+% Fill the "HOLE"
 for j = 2:length(lon_wrapped)
     if lon_wrapped(j)*lon_wrapped(j-1) < 0
         lat_wrapped(j) = NaN;

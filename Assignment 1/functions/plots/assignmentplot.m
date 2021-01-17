@@ -1,4 +1,4 @@
-function [outputArg1,outputArg2] = assignmentplot(planetA,planetB,planetC,datevec,TF1,TF2)
+function [TF] = assignmentplot(planetA,planetB,planetC,datevec,TF1,TF2)
 
 OPT_ARR_MJD2000 = datevec(3);
 OPT_GA = datevec(2);
