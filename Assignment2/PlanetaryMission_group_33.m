@@ -6,8 +6,8 @@ close all
 %% Set path to default
 path(pathdef);
 % Add [...] folder to path
-addpath(genpath('functions\'));
-addpath(genpath('../Common\'));
+addpath(genpath('functions/'));
+addpath(genpath('../Common/'));
 
 % Conversion constants
 DAY2SECS=24*3600;
@@ -21,8 +21,8 @@ J2 = const(3);					% second zonal armonic of earth         [ - ]
 omega_e = deg2rad(15.04)/3600;  % angular velocity of Earth's rotation  [ rad/s ]
 gw_longitude0 = 0;              % longitude of greenwhich   at time t0  [ rad ] 
 Psr = 4.56e-6;                  % Solar radiation pressure at 1AU           [N/m^2]
-NDAYS = 1;                      % Number of days to propagate for perturbations [days]
 
+NDAYS = 1;                      % Number of days to propagate for perturbations [days]
 
 %% Assigned orbit parameters
 selection = 1;
@@ -39,7 +39,7 @@ switch selection
         t0 = 0;
         k = 1;
         m = 1;
-        periods = 4;               % number of periods to plot
+        periods = 10;               % number of periods to plot
 
         date0 = [2021 01 01 00 00 00];  % Initial date at time t=0
         
@@ -81,7 +81,6 @@ a_repeating = repeating_ground_track(m,k,muE,omega_e);
 a_secular = repeating_ground_track(m, k, muE, omega_e, J2, R_E, e, i);
 
 %% Create the state vectors from orbital parameters
-
 % calculate the orbital periods
 T = 2*pi*sqrt(a^3/muE);                         % Original
 T_repeating = 2*pi*sqrt(a_repeating^3/muE);     % Repeating ground track
@@ -89,41 +88,81 @@ T_secular = 2*pi*sqrt(a_secular^3/muE);         % Repeating secular ground track
 
 
 %% Create time vectors
-
-t = (0:1:ENDTIME);                    	% Original
-t_repeating = (0:1:periods*T_repeating);	% Repeating ground track
-t_secular = (0:1:periods*T_secular);    	% Repeating secular ground track for the perturbed secular orbit
-
-%% create state vectors
-
-state_vec = [a e i RAAN omega f0];                   % Original
-state_vec_repeating = [a_repeating e i RAAN omega f0];           % Repeating ground track
-state_vec_secular = [a_secular e i RAAN omega f0];   % Repeating ground track for the perturbed secular orbit
-
-%% Compute RA, declination, lon and latitude
-% Original
-[alpha, delta, lon, lat] = groundtrack(state_vec, gw_longitude0, t, omega_e, muE, t0);
-
-% Repeating unperturbed ground track
-[alpha_repeating, delta_repeating, lon_repeating, lat_repeating] = groundtrack(state_vec_repeating, gw_longitude0, t_repeating, omega_e, muE, t0);
-
-% Repeating perturbed ground track
-[alpha_secular, delta_secular, lon_secular, lat_secular] = groundtrack(state_vec_secular,gw_longitude0,t_secular,omega_e, muE,t0, J2, R_E);
-
-%% Plotting of the groundtracks
-
-figure(1)
-
-% Original
-plot_groundtrack(lon,lat,'#77AC30');
-
-% Repeating ground track
-plot_groundtrack(lon_repeating,lat_repeating, 'r' );
-
-% Perturbed secular ground track
-plot_groundtrack(lon_secular, lat_secular, 'y');
-
-legend ('Original', 'Start', 'End','Repeating Ground track', 'Start', 'End', 'Repeating Secular Ground track', 'Start', 'End', 'Orientation','horizontal','Location','northoutside' );
+for j = 1 : 3
+    if j == 1
+        % one period
+        tEnd1=T;
+        tEnd2=T_repeating;
+        tEnd3=T_secular;
+    elseif j == 2
+        % one day
+        tEnd1=24*3600;
+        tEnd2=tEnd1;
+        tEnd3=tEnd1;
+    else
+        % ten days
+        tEnd1=10*24*3600;
+        tEnd2=tEnd1;
+        tEnd3=tEnd1;
+    end
+    t = (0:1:tEnd1);                    	% Original
+    t_repeating = (0:1:tEnd2);	% Repeating ground track
+    t_secular = (0:1:tEnd3);    	% Repeating secular ground track for the perturbed secular orbit
+    
+    %% create state vectors
+    
+    state_vec = [a e i RAAN omega f0];                   % Original
+    state_vec_repeating = [a_repeating e i RAAN omega f0];           % Repeating ground track
+    state_vec_secular = [a_secular e i RAAN omega f0];   % Repeating ground track for the perturbed secular orbit
+    
+    %% Compute RA, declination, lon and latitude
+    % Unperturbed original
+    [alpha, delta, lon, lat] = groundtrack(state_vec, gw_longitude0, t, omega_e, muE, t0);
+    
+    % J2 perturbed original
+    [alpha_j2, delta_j2, lon_j2, lat_j2] = groundtrack(state_vec, gw_longitude0, t, omega_e, muE, t0, J2, R_E);
+    
+    % Repeating unperturbed ground track
+    [alpha_repeating, delta_repeating, lon_repeating, lat_repeating] = groundtrack(state_vec_repeating, gw_longitude0, t_repeating, omega_e, muE, t0);
+    
+    % Repeating perturbed ground track
+    [alpha_secular, delta_secular, lon_secular, lat_secular] = groundtrack(state_vec_secular,gw_longitude0,t_secular,omega_e, muE,t0, J2, R_E);
+    
+    %% Plotting of the groundtracks
+    % unperturbed J2 perturbed original for 1 orbit, 1 day and 10 days
+    figure
+    
+    % Unperturbed original
+    plot_groundtrack(lon,lat,'y');
+    
+    % J2 perturbed original
+    plot_groundtrack(lon_j2,lat_j2,'r');
+    
+    legend ('Unperturbed original', 'Start', 'End','J2 perturbed original', 'Start', 'End','Orientation','horizontal','Location','northoutside' );
+    
+    switch j
+        case 1
+            title('GT of the unpert. 2BP and of the 2BP pert. by J2 - 1 orbit')
+            
+            % unperturbed and perturbed repeating GT
+            figure
+            
+            % Repeating ground track
+            plot_groundtrack(lon_repeating,lat_repeating, 'y' );
+            
+            % J2 Perturbed ground track
+            plot_groundtrack(lon_secular, lat_secular, 'r');
+            
+            legend ('Unperturbed repeating GT', 'Start', 'End','J2 perturbed repeating GT', 'Start', 'End','Orientation','horizontal','Location','northoutside' );
+            
+            title('repeating GT of the unpert. 2BP and of the 2BP pert. by J2 - 1 orbit')
+            
+        case 2
+            title('GT of the unpert. 2BP and of the 2BP pert. by J2 - 1 day')
+        case 3
+            title('GT of the unpert. 2BP and of the 2BP pert. by J2 - 10 days')
+    end
+end
 
 %%
 
