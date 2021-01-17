@@ -5,7 +5,7 @@ close all
 %% Set path to default
 path(pathdef);
 % Add [...] folder to path
-addpath(genpath('../functions\'));
+addpath(genpath('../functions_LABS\'));
 
 addpath(genpath('../Common\'));
 
@@ -18,7 +18,7 @@ DAY2SECS = 24*60*60;
 % Design an interplanetary transfer with minimum DeltaV_tot between planetA
 % and planetB, under the following mission requirements:
 
-MISSION = {'Mercury',1,[2023 11 01; 2025 01 01], [2024 04 01; 2025 03 01], 7.0,[210,210,210];
+MISSION = {'Mercury',1,[2050 01 01;2050 12 31], [2057 01 01; 2057 12 31], 1000,[210,210,210];
            'Venus',2,[2024 06 01; 2026 11 01], [2024 12 01; 2027 06 01], 3.0,[254,235,186];
            'Mars',4,[2025 08 01; 2031 01 01], [2026 01 01; 2032 01 01],3.5,[217, 83, 25];
            'Jupiter',5,[2026 06 01; 2028 06 01], [2028 06 01; 2034 01 01],9.1,[201,144,57];
@@ -30,13 +30,13 @@ MISSION = {'Mercury',1,[2023 11 01; 2025 01 01], [2024 04 01; 2025 03 01], 7.0,[
     
 
 % Numbers of the mission to be selected
-ID = 8;
+ID = 1;
 
 
 %% Create a departure window vector
 PROFILE = MISSION(ID,:);
 
-planetA = 3;
+planetA = 2;
 planetB = PROFILE{2};
 window_A = [PROFILE{3} zeros(2,3)];
 window_B = [PROFILE{4} zeros(2,3)];
@@ -123,7 +123,7 @@ x_PRIME = fmincon(@(x) designer_opt(planetA,planetB,xGA(1),xGA(2)),x0,A,b,Aeq,be
 %% plot the porkchop plot
 % make a few levels
 
-levels = linspace(floor(min_DV),floor(min_DV+10),11);  % fix the level for higher or lower DVs
+levels = linspace(floor(min_DV),floor(min_DV+20),15);  % fix the level for higher or lower DVs
 
 % Convert mjd2000 vectors to date format
 dates1 = zeros(1,length(T1));
@@ -146,8 +146,8 @@ contour(dates1,dates2,DV',levels,'ShowText','on');
 xtickangle(45);
 ytickangle(0);
 
-datetick('x','yyyy mmm dd','keeplimits','keepticks')
-datetick('y','yyyy mmm dd','keeplimits','keepticks')
+datetick('x','yyyy mmm dd','keeplimits')
+datetick('y','yyyy mmm dd','keeplimits')
 ylabel('Arrival date');
 xlabel('Departure date');
 
@@ -168,8 +168,8 @@ grid on
 %% Constant tof lines
 hold on
 caxis([levels(1) levels(end)])
-[C2,h2] = contour(dates1,dates2, dates2' - dates1,100:300:3000,'k');
-clabel(C2,h2);
+% [C2,h2] = contour(dates1,dates2, dates2' - dates1,100:300:3000,'k');
+% clabel(C2,h2);
 
 %% calculate the transfer arc
 
