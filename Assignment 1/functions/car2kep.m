@@ -21,7 +21,7 @@ function [a, e, i, RAAN, omega, f] = car2kep(r_vec,v_vec,mu)
 %   Davide Demartini
 %   Davide Iafrate
 %   Marwan Alkady
-%   Pedro Bossi Nunez
+%   Pedro Bossi Núñez
 %
 % VERSIONS
 %   2020-05-15: First version

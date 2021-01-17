@@ -8,7 +8,7 @@ function [r,v] = propagator(r0,v0,mu,tspan,J2,R_e,date0,Cr,Psr,Am)
 % 
 %   
 % PROTOTYPE:
-%    [v,r] = orbit_propagation(r0,v0,mu,tspan)
+%    [r,v] = propagator(r0,v0,mu,tspan,J2,R_e,date0,Cr,Psr,Am)
 % 
 % INPUT:
 %   r0[3]            Initial radius vector             [ km ]
@@ -29,8 +29,10 @@ function [r,v] = propagator(r0,v0,mu,tspan,J2,R_e,date0,Cr,Psr,Am)
 %   v [ n x 3]      Velocity vector computed at each time of the tspan 
 %                   vector                             [km/s]
 % CONTRIBUTORS:
-%   
-%   Davide Iafrate
+%   Davide Iafrate      
+%   Alkady Marwan
+%   Pedro Bossi Núñez
+%   Davide Demartini
 %
 % VERSIONS
 %   2020-10-16: First version

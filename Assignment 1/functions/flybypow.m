@@ -21,7 +21,7 @@ function [dv_p,delta,a,e,Delta,rp,vp0] = flybypow(vinfM,vinfP,mu)
 %
 % CONTRIBUTORS:
 %   Alkady Marwan
-%   Bossi Nunez Pedro
+%   Bossi Núñez Pedro
 %   Demartini Davide
 %   Iafrate Davide
 %

@@ -15,7 +15,7 @@ function dy = twobodyode(t,y,mu)
 %
 % CONTRIBUTORS:
 %   Alkady Marwan
-%   Bossi Nunez Pedro
+%   Bossi Núñez Pedro
 %   Davide Demartini
 %   Davide Iafrate
 %

@@ -21,7 +21,7 @@ function [kep_el,R,V] = ephemeris(timevecMJD2000,PLANETNUM)
 %   Davide Demartini
 %   Davide Iafrate
 %   Marwan Alkady
-%   Pedro Bossi Nunez
+%   Pedro Bossi Núñez 
 %
 % VERSIONS
 %   2020-10-12: First version

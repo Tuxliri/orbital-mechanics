@@ -18,7 +18,14 @@ function a = a_j2_RSW(s,mu,J2,R_E)
 %   a[3]    vector of perturbing accelerations [ar,as,aw]       [km/s^2]
 % 
 % CONTRIBUTORS:
-%   Davide Iafrate      14-12-2020
+%   Davide Iafrate      
+%   Alkady Marwan
+%   Pedro Bossi Núñez
+%   Davide Demartini
+%
+% VERSIONS
+%   2020-10-24: First version
+%   14-12-2020: Second version
 
 % Extract the keplerian elements from the state vector
 a = s(1);

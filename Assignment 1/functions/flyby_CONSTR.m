@@ -24,7 +24,7 @@ function [c,ceq] = flyby_CONSTR(planetA,planetB,planetC,t_dep,t_ga,t_arr,rp_min)
 %   Davide Demartini
 %   Davide Iafrate
 %   Marwan Alkady
-%   Pedro Bossi Nunez
+%   Pedro Bossi Núñez
 %
 % VERSIONS
 %   2020-12-26: First version

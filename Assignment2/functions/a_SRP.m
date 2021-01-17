@@ -4,7 +4,7 @@ function [a_RSW, a_ECI] = a_SRP(s,Cr,Psr,R_E,Am,mjd2000)
 %   the three components
 %
 % PROTOTYPE:
-%   a = a_j2_RSW(mu,s,J2,R_E)
+%   [a_RSW, a_ECI] = a_SRP(s,Cr,Psr,R_E,Am,mjd2000)
 %
 % INPUT:
 %   s[6]        state vector containing the keplerian elements
@@ -18,10 +18,17 @@ function [a_RSW, a_ECI] = a_SRP(s,Cr,Psr,R_E,Am,mjd2000)
 %
 % OUTPUT:
 %   a_RSW[3x1]        vector of perturbing accelerations [ar,as,aw]       [km/s^2]
-%   a_[3x1]        vector of perturbing accelerations [ar,as,aw]       [km/s^2]
+%   a_ECI[3x1]        vector of perturbing accelerations [ar,as,aw]       [km/s^2]
 %
 % CONTRIBUTORS:
-%   Davide Iafrate      14-12-2020
+%   Davide Iafrate      
+%   Alkady Marwan
+%   Pedro Bossi Núñez
+%   Davide Demartini
+%
+% VERSIONS
+%   14-12-2020: First version
+
 
 % Extract the keplerian elements from the state vector
 a = s(1);

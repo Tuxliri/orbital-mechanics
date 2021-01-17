@@ -27,7 +27,7 @@ function [r_vec,v_vec]=kep2car(a,e,i,RAAN,omega,f,mu)
 %   
 % CONTRIBUTORS:
 %   Alkady Marwan
-%   Bossi Nunez Pedro
+%   Bossi Núñez Pedro
 %   Davide Demartini
 %   Davide Iafrate
 %

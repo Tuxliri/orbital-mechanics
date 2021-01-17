@@ -4,7 +4,7 @@ function a = repeating_ground_track(m, k, mu, omega_e, J2,R_e, e, i)
 %   revolutions, with the option of accounting for the SECULAR PERTURBATIONS due to J2
 %
 % PROTOTYPE:
-%   a = repeating_ground_track(m, k, mu, omega)
+%   a = repeating_ground_track(m, k, mu, omega_e, J2,R_e, e, i)
 %
 % INPUT:
 %   m[1]        rotations of the planet (positive integer)      [-]
@@ -20,7 +20,10 @@ function a = repeating_ground_track(m, k, mu, omega_e, J2,R_e, e, i)
 %   a[1]        required semi-major axis                        [km]
 %
 % CONTRIBUTORS:
-%   Davide Iafrate
+%   Davide Iafrate      
+%   Alkady Marwan
+%   Pedro Bossi Núñez
+%   Davide Demartini
 %
 % VERSIONS
 %   2020-10-30: First version

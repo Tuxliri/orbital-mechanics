@@ -14,6 +14,9 @@ function [delta,alpha] = r2RAdelta(r)
 %
 % CONTRIBUTORS:
 %   Davide Demartini
+%   Davide Iafrate      
+%   Alkady Marwan
+%   Pedro Bossi Núñez
 %
 % VERSIONS
 %   15-12-2020: First version

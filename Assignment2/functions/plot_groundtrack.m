@@ -12,9 +12,10 @@ function plot_groundtrack(lon,lat,col)
 % OUTPUT:
 %
 % CONTRIBUTORS:
-%   Davide Iafrate
-%   Davide Demartini
+%   Davide Iafrate      
+%   Alkady Marwan
 %   Pedro Bossi Núñez
+%   Davide Demartini
 %
 % VERSIONS:
 %   2020-10-16: First version
