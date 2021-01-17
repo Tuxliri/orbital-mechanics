@@ -5,12 +5,15 @@ close all
 
 %% Set path to default
 path(pathdef);
+
 % Add [...] folder to path
 addpath(genpath('functions\plots\'));
 addpath(genpath('functions\'));
 addpath(genpath('../Common\'));
 
 %% Problem definition
+muSun = astroConstants(4);
+
 Neptune.ID = 8;    % Departure planet
 Venus.ID = 3;      % Gravity assist planet
 Mercury.ID = 1;    % Arrival planet
@@ -37,6 +40,14 @@ rpmin = 6300;   % [ km ]
 
 lb = [min_tdep; min_tGA; min_tarr]; % lower boundary
 ub = [max_tdep; max_tGA; max_tarr]; % upper boundary
+
+% Calculate the parabolic ToF for departure conditions
+[~,R_N0,~] = ephemeris(min_tdep,Neptune.ID);
+[~,R_V0,~] = ephemeris(min_tdep,Venus.ID);
+[~,R_M0,~] = ephemeris(min_tdep,Mercury.ID);
+
+TOF_p_NV = parabolicTOF(norm(R_N0),norm(R_V0),muSun);
+TOF_p_VM = parabolicTOF(norm(R_V0),norm(R_M0),muSun);
 
 %% Coarse grid search
 departure = linspace(min_tdep,max_tdep,100);
@@ -112,7 +123,7 @@ A = [1 -1 0;
     0 1 -1;
     1 0 -1];
 
-b = [-300; -20; -350];
+b = [-TOF_p_NV; -TOF_p_VM; -(TOF_p_NV+TOF_p_VM)]*365;
 
 Aeq = [];
 beq = [];
@@ -125,11 +136,12 @@ nonlincon = @(x) flyby_CONSTR(Neptune,Venus,Mercury,x(1),x(2),x(3),rpmin);
 options = optimoptions('fmincon','OptimalityTolerance',1e-12,'StepTolerance',1e-12);
 x_PERF = fmincon(@(x) objfun(x),x_GRID,A,b,Aeq,beq,lb,ub,nonlincon);
 
-%% Genetic algorithm function
+% %% Genetic algorithm function
 % numvars = 3;        % Three variables, tdep,tGA and tarr
 % 
-% GAopts = optimoptions('ga','PopulationSize',3e20,'MaxStallTime',120);
-% [x_0, fval] = ga(objfun,numvars,A,b,Aeq,beq,lb,ub,nonlincon);
+% GAopts = optimoptions('ga','PopulationSize',3e6);
+% [x_0, fval] = ga(objfun,numvars,A,b,Aeq,beq,lb,ub,nonlincon,GAopts);
+% x_PERF_GA = fmincon(@(x) objfun(x),x_0,A,b,Aeq,beq,lb,ub,nonlincon);
 % 
 % for i = 1:3
 %     mjd20002date(x_PERF(i))
@@ -137,7 +149,6 @@ x_PERF = fmincon(@(x) objfun(x),x_GRID,A,b,Aeq,beq,lb,ub,nonlincon);
 
 %% Compute the positions and velocities of the planets at the optimum times
 % as found by the GRID + FMINCON procedure
-
 [DV, DV_dep, DV_arr, DV_ga, FLYBY, TRANSFER1, TRANSFER2]...
     = GAtransfer(Neptune, Venus, Mercury, x_PERF(1), x_PERF(2), x_PERF(3));
 

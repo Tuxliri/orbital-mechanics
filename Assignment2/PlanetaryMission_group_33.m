@@ -21,11 +21,11 @@ J2 = const(3);					% second zonal armonic of earth         [ - ]
 omega_e = deg2rad(15.04)/3600;  % angular velocity of Earth's rotation  [ rad/s ]
 gw_longitude0 = 0;              % longitude of greenwhich   at time t0  [ rad ] 
 Psr = 4.56e-6;                  % Solar radiation pressure at 1AU           [N/m^2]
-NDAYS = 1200;                      % Number of days to propagate for perturbations [days]
+NDAYS = 1;                      % Number of days to propagate for perturbations [days]
 
 
 %% Assigned orbit parameters
-selection = 3;
+selection = 1;
 
 switch selection
     case 1
@@ -87,11 +87,12 @@ T = 2*pi*sqrt(a^3/muE);                         % Original
 T_repeating = 2*pi*sqrt(a_repeating^3/muE);     % Repeating ground track
 T_secular = 2*pi*sqrt(a_secular^3/muE);         % Repeating secular ground track for the perturbed secular orbit
 
+
 %% Create time vectors
 
-t = (0:60:periods*T);                    	% Original
-t_repeating = (0:60:periods*T_repeating);	% Repeating ground track
-t_secular = (0:60:periods*T_secular);    	% Repeating secular ground track for the perturbed secular orbit
+t = (0:1:ENDTIME);                    	% Original
+t_repeating = (0:1:periods*T_repeating);	% Repeating ground track
+t_secular = (0:1:periods*T_secular);    	% Repeating secular ground track for the perturbed secular orbit
 
 %% create state vectors
 
@@ -150,15 +151,17 @@ tStart = tic;
 [ri, vi] = propagator(r0,v0,muE,tspan,J2,R_E,date0,Cr,Psr,Am);
 
 % Convert cartesian to keplerian
-for i = 1:length(ri(:,1))
+for j = 1:length(ri(:,1))
     
-    [kepB(i,1),kepB(i,2),kepB(i,3),kepB(i,4),kepB(i,5),kepB(i,6)] = car2kep(ri(i,:),vi(i,:),muE);
+    [kepB(j,1),kepB(j,2),kepB(j,3),kepB(j,4),kepB(j,5),kepB(j,6)] = car2kep(ri(j,:),vi(j,:),muE);
 end
 
 % Find out how much time the cartesian propagation took
 tCART = toc(tStart);
 
+%% Calculating secular effect
 
+RAAN
 %% Filtering lower frequencies
 
 % Cut-off period
@@ -211,7 +214,7 @@ ylabel('$\mathbf{e-e_0 [-]}$','Interpreter', 'latex','Fontsize', 14)
 
 % inclination
 subplot(2,3,3)
-plot(tspan,kep_gauss(:,3)-rad2deg(i),tspan,kepB(:,3)-i,tspan,kep_filtered(:,3)-rad2deg(i));
+plot(tspan,kep_gauss(:,3)-rad2deg(i),tspan,kepB(:,3)-rad2deg(i),tspan,kep_filtered(:,3)-rad2deg(i));
 legend('Gauss equations','Cartesian','Secular (filtered)')
 grid on
 xlabel('${time [days]}$','Interpreter', 'latex','Fontsize', 14)
@@ -223,7 +226,7 @@ plot(tspan,kep_gauss(:,4)-rad2deg(RAAN),tspan,kepB(:,4)-rad2deg(RAAN),tspan,kep_
 legend('Gauss equations','Cartesian','Secular (filtered)')
 grid on
 xlabel('${time [days]}$','Interpreter', 'latex','Fontsize', 14)
-ylabel('$\mathbf{\Omega  [deg]}$','Interpreter', 'latex','Fontsize', 14)
+ylabel('$\mathbf{\Omega -\Omega_0 [deg]}$','Interpreter', 'latex','Fontsize', 14)
 
 % omega
 subplot(2,3,5)
@@ -246,14 +249,14 @@ ylabel('$\mathbf{f-f_0  [deg]}$','Interpreter', 'latex','Fontsize', 14)
 figure(3)
 
 % Semi-major axis
-subplot(2,3,1)
+subplot(3,2,1)
 semilogy(tspan,abs((kep_gauss(:,1) - kepB(:,1)))./kep0(1));
 grid on
 xlabel('${time [days]}$','Interpreter', 'latex','Fontsize', 14)
 ylabel('${|a_{Car} - a_{Gauss}| / a0 [-]}$','Interpreter', 'latex')
 
 % Eccentricity
-subplot(2,3,2)
+subplot(3,2,2)
 semilogy(tspan,abs(kep_gauss(:,2) - kepB(:,2)));
 grid on
 xlabel('${time [days]}$','Interpreter', 'latex','Fontsize', 14)
@@ -261,21 +264,21 @@ ylabel('${|e_{Car} - e_{Gauss}| [-]}$','Interpreter', 'latex')
 
 
 % inclination
-subplot(2,3,3)
+subplot(3,2,3)
 semilogy(tspan,abs(kep_gauss(:,3) - kepB(:,3)) ./(2*pi));
 grid on
 xlabel('${time [days]}$','Interpreter', 'latex','Fontsize', 14)
 ylabel('${|i_{Car} - i_{Gauss}| / 2\pi [-]}$','Interpreter', 'latex')
 
 % RAAN
-subplot(2,3,4)
+subplot(3,2,4)
 semilogy(tspan,abs(kep_gauss(:,4) - kepB(:,4)) ./(2*pi));
 grid on
 xlabel('${time [days]}$','Interpreter', 'latex','Fontsize', 14)
 ylabel('${|\Omega_{Car} - \Omega_{Gauss}| / 2\pi [-]}$','Interpreter', 'latex')
 
 % omega
-subplot(2,3,5)
+subplot(3,2,5)
 semilogy(tspan,abs(kep_gauss(:,5) - kepB(:,5)) ./(2*pi));
 grid on
 xlabel('${time [days]}$','Interpreter', 'latex','Fontsize', 14)
@@ -283,7 +286,7 @@ ylabel('${|\omega_{Car} - \omega_{Gauss}| / 2\pi [-]}$','Interpreter', 'latex')
 
 
 % omega
-subplot(2,3,6)
+subplot(3,2,6)
 semilogy(tspan,abs(kep_gauss(:,6) - kepB(:,6)) ./ kep0(5));
 grid on
 xlabel('${time [days]}$','Interpreter', 'latex','Fontsize', 14)
