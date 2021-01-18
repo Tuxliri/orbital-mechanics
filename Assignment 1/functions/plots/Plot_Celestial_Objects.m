@@ -1,4 +1,4 @@
-function Plot_Celestial_Objects(sun,obj,orbit,date)
+function Plot_Celestial_Objects(sun,obj,orbit,date,scale)
 %
 % DESCRIPTION:
 %   Given a date, this algorithm plots the position of whished planets
@@ -6,7 +6,7 @@ function Plot_Celestial_Objects(sun,obj,orbit,date)
 %   info.
 %
 % PROTOTYPE:
-%   Plot_Celestial_Objects(sun, obj, orbit, date)
+%   Plot_Celestial_Objects(sun, obj, orbit, date, scale)
 %
 % INPUT:
 %   sun   [ 1 ]: diplsy Sun
@@ -32,6 +32,9 @@ function Plot_Celestial_Objects(sun,obj,orbit,date)
 %       proleptic calendar. This is based on the Gregorian calendar but 
 %       extended to cover dates before its introduction. Date must be after
 %       12:00 noon, 24 November -4713. 
+%   scale [ 9 x 1 ]: how big should a planet be displayed (experiment with 
+%       different data). The 1st position is for Mercury, the 9th is for
+%       the Sun
 %
 % OUTPUT:
 %   Graphical representation of selected celestial objects at given date
@@ -42,6 +45,7 @@ function Plot_Celestial_Objects(sun,obj,orbit,date)
 %   PlotObject
 %   astroConstants
 %   plotOrbit
+%   kep2car
 %
 % CONTRIBUTORS:
 %   Alkady Marwan
@@ -51,6 +55,7 @@ function Plot_Celestial_Objects(sun,obj,orbit,date)
 %
 % VERSIONS:
 %   20-12-2020: First version
+%   18-01-2021: Second Version
 %
 
 % Convert Gregorian (current) date into MJD200
@@ -85,22 +90,25 @@ end
 
 % Display COs or orbits or both
 if orbit == 0
-    scale = max(obj);
     for j = 1:length(obj)
-        PlotObject(obj(j), r(j,:), scale);
+        PlotObject(obj(j), r(j,:), scale(j));
         hold on;
     end
 elseif orbit == 1
     for j = 1:length(obj)
-        plotOrbit(a(j), e(j), i(j), Om(j), om(j), mu);
+        plotOrbit(obj(j), date);
         hold on;
     end
-elseif orbit == 2
-    scale = max(obj);
+elseif orbit == 2 
+    % The two for cycles must be separated in order to have meaningful
+    % legend when plotting
     for j = 1:length(obj)
-        PlotObject(obj(j), r(j,:), scale);
+        plotOrbit(obj(j), date);
         hold on;
-        plotOrbit(a(j), e(j), i(j), Om(j), om(j), mu);
+    end
+    for i = 1:length(obj)
+        PlotObject(obj(i), r(i,:), scale(i));
+        hold on;
     end
 else
     error('Invalid orbit value');
@@ -108,6 +116,9 @@ end
 
 % Display Sun
 if sun == 1
-    PlotObject(0, [0 0 0], scale);
+    if length(obj) < 9
+        j = length(obj);
+    end
+    PlotObject(0, [0 0 0], scale(j+1));
 end
 end
