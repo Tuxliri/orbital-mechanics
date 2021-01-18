@@ -26,7 +26,7 @@ function [DV, DV1, DV2, v_t_start, v_t_end]= single_arc(t1,t2,mu,ri,rf,vi,vf)
 % 
 % CONTRIBUTORS:
 %   Alkady Marwan
-%   Bossi Nunez Pedro
+%   Bossi Núñez Pedro
 %   Davide Demartini
 %   Davide Iafrate
 %

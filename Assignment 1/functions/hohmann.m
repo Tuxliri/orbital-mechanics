@@ -27,7 +27,7 @@ function [DV1,DV2,TOF] = hohmann(ID_A,ID_B,date)
 %
 % CONTRIBUTORS:
 %   Alkady Marwan
-%   Bossi Nunez Pedro
+%   Bossi Núñez Pedro
 %   Demartini Davide
 %   Davide Iafrate
 %

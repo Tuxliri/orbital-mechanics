@@ -20,9 +20,10 @@ function [lon,lat] = RAdelta2latlon(alpha,delta,gw_lon0,omega_r,t,t0)
 %   lat     [ n x 1 ]    Object latitude at t              [ rad ]
 %
 % CONTRIBUTORS:
-%   Davide Iafrate
-%   Davide Demartini
+%   Davide Iafrate      
+%   Alkady Marwan
 %   Pedro Bossi Núñez
+%   Davide Demartini
 %
 % VERSIONS
 %   15-12-2020: First version

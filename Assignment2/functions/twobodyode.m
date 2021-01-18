@@ -5,7 +5,7 @@ function dy = twobodyode(t,y,mu,J2,R_e,date0,Cr,Psr,Am)
 % J2+SRP: necessary parameters [J2,R_e,date0,Cr,Psr,Am]
 % 
 % PROTOTYPE:
-%   dy = twobodyode(t,y)
+%   dy = twobodyode(t,y,mu,J2,R_e,date0,Cr,Psr,Am)
 % 
 % INPUT:
 %   t[1]       Time                                             [T]
@@ -23,7 +23,10 @@ function dy = twobodyode(t,y,mu,J2,R_e,date0,Cr,Psr,Am)
 %   dy[6x1]         Derivative of the state [L, L/T]
 %
 % CONTRIBUTORS:
-%   Davide Iafrate
+%   Davide Iafrate      
+%   Alkady Marwan
+%   Pedro Bossi Núñez
+%   Davide Demartini
 %
 % VERSIONS
 %   2020-09-24: First version

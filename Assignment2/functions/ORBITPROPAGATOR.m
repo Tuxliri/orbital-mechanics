@@ -22,7 +22,10 @@ function [t,kep] = ORBITPROPAGATOR(t0,s0,tspan,date0,J2,Cr,Psr,Am)
 %              [a,e,i,RAAN,omega,f]            [km,-,rad,rad,rad,rad]
 %
 % CONTRIBUTORS:
-%   Davide Iafrate
+%   Davide Iafrate      
+%   Alkady Marwan
+%   Pedro Bossi Núñez
+%   Davide Demartini
 %
 % VERSIONS
 %   2020-12-14: First version
