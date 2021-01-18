@@ -16,7 +16,7 @@ function [a, e, i, RAAN, omega, f] = car2kep(r_vec,v_vec,mu)
 %           f is calculated as the true longitude, angular
 %           distance between the gamma direction and the position vector
 % PROTOTYPE:
-%   [a, e, i, RAAN, omega, f] = kep2car(r_vec,v_vec) 
+%   [a, e, i, RAAN, omega, f] = car2kep(r_vec,v_vec,mu)
 %   
 % INPUT:
 %
@@ -34,11 +34,13 @@ function [a, e, i, RAAN, omega, f] = car2kep(r_vec,v_vec,mu)
 %   f[1]        true anomaly        [ rad ]
 %
 % CONTRIBUTORS:
-%   Davide Iafrate
+%   Davide Iafrate      
+%   Alkady Marwan
+%   Pedro Bossi Núñez
+%   Davide Demartini
 %
 % VERSIONS
 %   2020-10-12: First version
-%
 
 eps = 1.e-10;
 

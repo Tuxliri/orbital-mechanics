@@ -38,7 +38,7 @@ function [DV,DV_dep,DV_arr,DV_ga,FLYBY,TRANSFER1,TRANSFER2]= GAtransfer(planetA,
 %
 % CONTRIBUTORS:
 %   Alkady Marwan
-%   Bossi Nunez Pedro
+%   Bossi Núñez Pedro
 %   Demartini Davide
 %   Davide Iafrate
 %

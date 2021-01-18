@@ -5,7 +5,7 @@ function ds = EOM_RSW(t,s,mu,a_per_rsw)
 % RSW (Radial-transveral-out of plane) reference frame
 % 
 % PROTOTYPE:
-%   ds = EOM(t,s,mu,a_per)
+%   ds = EOM_RSW(t,s,mu,a_per_rsw)
 % 
 % INPUT:
 %   t[1]        time of evaluation
@@ -19,7 +19,13 @@ function ds = EOM_RSW(t,s,mu,a_per_rsw)
 %   ds[6]   derivative of the state vector
 % 
 % CONTRIBUTORS:
-%   Davide Iafrate      14-12-2020
+%   Davide Iafrate      
+%   Alkady Marwan
+%   Pedro Bossi Núñez
+%   Davide Demartini
+%
+% VERSIONS
+%   14-12-2020: First version
 
 % Extract the accelerations in the rsw frame
 acc = a_per_rsw(t,s);

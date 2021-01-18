@@ -2,7 +2,7 @@ function acc = a_tot_rsw(t,s,muE,J2,R_E,Cr,Psr,Am,mjd2000)
 %a_tot_rsw Computation of the vector of disturbing accelerations in the RSW
 %           (Radial-transveral-out of plane) reference frame
 % PROTOTYPE:
-%   acc = a_tot_rsw(t,s,R_E,muE,J2)
+%   acc = a_tot_rsw(t,s,muE,J2,R_E,Cr,Psr,Am,mjd2000)
 % 
 % INPUT:
 %   t[1]    time                                [s]
@@ -11,7 +11,7 @@ function acc = a_tot_rsw(t,s,muE,J2,R_E,Cr,Psr,Am,mjd2000)
 %   R_E[1]  mean radius of the Earth            [km]
 %   muE[1]  Earth gravitational parameter       [km^3/s^2]
 %   J2[1]   Second zonal harmonic               [-]
-%   cr[1]       Refelctivity coefficient        [-]
+%   Cr[1]       Refelctivity coefficient        [-]
 %   Psr[1]      Solar radiation pressure               [N/m^2]
 %   Am[1]       area to mass ratio of the S/C       [m^2/kg]
 %   mjd2000[1]  mjd2000 date                        [-]
@@ -21,7 +21,13 @@ function acc = a_tot_rsw(t,s,muE,J2,R_E,Cr,Psr,Am,mjd2000)
 %   acc[3]  vector of perturbing accelerations [ar,as,aw]
 % 
 % CONTRIBUTORS:
-%   Davide Iafrate      14-12-2020
+%   Davide Iafrate      
+%   Alkady Marwan
+%   Pedro Bossi Núñez
+%   Davide Demartini
+%
+% VERSIONS
+%   14-12-2020: First version
 
 DAY2SECS = 24*3600;
 date_mjd = mjd2000 + t /DAY2SECS;

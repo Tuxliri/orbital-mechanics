@@ -1,9 +1,9 @@
 function [alpha, delta, lon, lat] = groundtrack(state_vec, gw_longitude0, t, omega_e, mu, t0,J2,R_E)
-%  function groundTrack that computes the ground track
+%  function that computes the ground track
 %  of an orbit
 %
 % PROTOTYPE:
-%    [alpha, delta, lon, lat] = groundtrack(state_vec, gw_longitude, t, omega_e, mu, t0,J2,R_E);
+%    [alpha, delta, lon, lat] = groundtrack(state_vec, gw_longitude0, t, omega_e, mu, t0,J2,R_E);
 %   
 % INPUT:
 %   state_vec[2 | 6]        Cartesian or keplerian elements at initial time [ - ]
@@ -37,8 +37,10 @@ function [alpha, delta, lon, lat] = groundtrack(state_vec, gw_longitude0, t, ome
 %   lat[1]     latitude with respect to rotating Earth  [ rad ]
 % 
 % CONTRIBUTORS:
-%   
-%   Davide Iafrate
+%   Davide Iafrate      
+%   Alkady Marwan
+%   Pedro Bossi Núñez
+%   Davide Demartini
 %
 % VERSIONS
 %   2020-10-16: First version

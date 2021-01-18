@@ -20,7 +20,7 @@ function [r,v] = propagator(r0,v0,mu,tspan)
 %
 % CONTRIBUTORS:
 %   Alkady Marwan
-%   Bossi Nunez Pedro
+%   Bossi Núñez Pedro
 %   Davide Demartini
 %   Davide Iafrate
 %

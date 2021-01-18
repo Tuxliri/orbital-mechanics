@@ -5,7 +5,7 @@ function [r_vec,v_vec] = kep2car(a,e,i,RAAN,omega,f,mu)
 % ATTENTION: 
 % 1)   CHECK if it works with parabolic and hyperbolic orbits;
 % PROTOTYPE:
-%    [r_vec,v_vec] = kep2car(a, e, i, RAAN, omega, f, mu) 
+%    [r_vec,v_vec] = kep2car(a,e,i,RAAN,omega,f,mu)
 %   
 % INPUT: 
 %   a[1]        semi-major axis                       [ km ]
@@ -21,8 +21,10 @@ function [r_vec,v_vec] = kep2car(a,e,i,RAAN,omega,f,mu)
 %   v_vec[3]   velocity vector                        [ km/s ]
 %   
 % CONTRIBUTORS:
+%   Davide Iafrate      
+%   Alkady Marwan
+%   Pedro Bossi Núñez
 %   Davide Demartini
-%   Davide Iafrate
 %
 % VERSIONS
 %   2020-10-12: First version
