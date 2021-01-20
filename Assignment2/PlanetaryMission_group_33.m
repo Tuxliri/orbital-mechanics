@@ -22,7 +22,7 @@ omega_e = deg2rad(15.04)/3600;  % angular velocity of Earth's rotation  [ rad/s 
 gw_longitude0 = 0;              % longitude of greenwhich   at time t0  [ rad ] 
 Psr = 4.56e-6;                  % Solar radiation pressure at 1AU           [N/m^2]
 
-NDAYS = 1;                      % Number of days to propagate for perturbations [days]
+NDAYS = 3100;                      % Number of days to propagate for perturbations [days]
 
 %% Assigned orbit parameters
 selection = 1;
@@ -32,16 +32,18 @@ switch selection
         a = 40718;		% [km]	semi-major axis
         e = 0.6177; 	% [-]	eccentricity
         i = deg2rad(78.2195);	% [deg]	inclination
-        RAAN = deg2rad(0);
-        omega = deg2rad(40);
+        RAAN = deg2rad(11.3);
+        omega = deg2rad(224.4);
         f0 = deg2rad(0);
-        hp = 15566.491;	% [km]	height of perigee
+        hp = 15566.491;	% [km]	radius of perigee
+		%% POSSIBLE SATELLITE 	BREEZE-M R/B ID: 45987
+		%ID:23802 POLAR
         t0 = 0;
         k = 1;
         m = 1;
         periods = 10;               % number of periods to plot
 
-        date0 = [2021 01 01 00 00 00];  % Initial date at time t=0
+        date0 = [2000 01 02 00 00 00];  % Initial date at time t=0
         
         % SRP perturbation data
         Cr = 1.2;		% [-] reflectivity coefficient
