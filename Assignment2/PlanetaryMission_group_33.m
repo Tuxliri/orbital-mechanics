@@ -19,10 +19,10 @@ R_E = const(1);					% radius of the Earth                   [ km ]
 muE = const(2);					% gravitational parameter of Earth      [ km^3/s^2 ]
 J2 = const(3);					% second zonal armonic of earth         [ - ]
 omega_e = deg2rad(15.04)/3600;  % angular velocity of Earth's rotation  [ rad/s ]
-gw_longitude0 = 0;              % longitude of greenwhich   at time t0  [ rad ] 
+gw_longitude0 = 0;              % longitude of greenwhich   at time t0  [ rad ]
 Psr = 4.56e-6;                  % Solar radiation pressure at 1AU           [N/m^2]
 
-NDAYS = 3100;                      % Number of days to propagate for perturbations [days]
+NDAYS = 1;                      % Number of days to propagate for perturbations [days]
 
 %% Assigned orbit parameters
 selection = 1;
@@ -32,18 +32,16 @@ switch selection
         a = 40718;		% [km]	semi-major axis
         e = 0.6177; 	% [-]	eccentricity
         i = deg2rad(78.2195);	% [deg]	inclination
-        RAAN = deg2rad(11.3);
-        omega = deg2rad(224.4);
+        RAAN = deg2rad(0);
+        omega = deg2rad(40);
         f0 = deg2rad(0);
-        hp = 15566.491;	% [km]	radius of perigee
-		%% POSSIBLE SATELLITE 	BREEZE-M R/B ID: 45987
-		%ID:23802 POLAR
+        hp = 15566.491;	% [km]	height of perigee
         t0 = 0;
         k = 1;
         m = 1;
         periods = 10;               % number of periods to plot
-
-        date0 = [2000 01 02 00 00 00];  % Initial date at time t=0
+        
+        date0 = [2021 01 01 00 00 00];  % Initial date at time t=0
         
         % SRP perturbation data
         Cr = 1.2;		% [-] reflectivity coefficient
@@ -62,7 +60,7 @@ switch selection
         k = 1;
         m = 1;
         periods = 4;               % number of periods to plot
-
+        
         J2 = 0;                      % Overwrite J2 coefficient to test SRP
         t0 = 0;
         
@@ -72,7 +70,6 @@ switch selection
         Cr = 2;		% [-] reflectivity coefficient
         Am = 2;			% [m^2/kg] area-to-mass ratio
 end
-
 
 %% Calculate the semi-major axis of the repeating ground track
 
@@ -118,7 +115,7 @@ for j = 1 : 3
     t_repeating = (0:1:tEnd2);	% Repeating ground track
     t_secular = (0:1:tEnd3);    	% Repeating secular ground track for the perturbed secular orbit
     
-
+    
     %% Compute RA, declination, lon and latitude
     % Unperturbed original
     [alpha, delta, lon, lat] = groundtrack(state_vec, gw_longitude0, t, omega_e, muE, t0);
@@ -332,3 +329,54 @@ semilogy(tspan,abs(kep_gauss(:,6) - kepB(:,6)) ./ kep0(5));
 grid on
 xlabel('${time [days]}$','Interpreter', 'latex','Fontsize', 14)
 ylabel('${|f_{Car} - f_{Gauss}| / f_{Gauss} [-]}$','Interpreter', 'latex')
+
+%% Plot the Orbit evolution
+for j=1:2
+    %number of orbits
+    switch j
+        case 1
+            norb=1;
+        case 2
+            norb=500;
+    end
+    pointsperorb=1000;
+    %plot
+    figure
+    axis equal
+    rin=r0;
+    vin=v0;
+    MAP = colormap('jet');
+    lenmap = length(MAP(:,1));
+    colscale=(norb/lenmap);
+    for q=1:norb
+        col=ceil(q/colscale);
+        tvect=linspace((q-1)*T, q*T, pointsperorb);
+        [r, v] = propagator(rin,vin,muE,tvect,J2,R_E,date0,Cr,Psr,Am);
+        rin=r(end,:);
+        vin=v(end,:);
+        pos=[r(:,1) r(:,2) r(:,3)];
+        switch j
+            case 1
+                plot3(pos(:,1),pos(:,2),pos(:,3),'Color',MAP(col,:),'LineWidth',3);
+            case 2
+                plot3(pos(:,1),pos(:,2),pos(:,3),'Color',MAP(col,:));
+        end
+        hold on
+    end
+    scatter3(r0(1), r0(2), r0(3),'LineWidth',3);
+    xlabel('X');
+    ylabel('Y');
+    zlabel('Z');
+    switch j
+        case 1
+            title('Orbit representation');
+        case 2
+            title('Orbit evolution');
+    end
+    grid on
+    C = imread('EarthTexture.jpg');
+    [x, y, z] = ellipsoid(0,0,0, 6378.135, 6378.135,6356.750,1E2);
+    surf(x,y,z,circshift(flip(C),[0,0]), 'FaceColor','texturemap','EdgeColor','none');
+    axis equal;
+    hold on;
+end
