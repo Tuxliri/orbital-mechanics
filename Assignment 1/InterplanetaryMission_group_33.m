@@ -236,8 +236,8 @@ obj = [1 2 8];
 scale = [7000 2500  1000 30]; % DO NOT CHANGE!!!
 orbit = 2;
 Plot_Celestial_Objects(sun,obj,orbit,date,scale)
-title('Given orbits','FontSize',15)
-legend('Mercury', 'Venus','Neptune','FontSize',15)
+title('Given orbits','FontSize',17)
+legend('Mercury', 'Venus','Neptune','FontSize',15,'Location','best')
 grid on
 xlabel('km','FontSize',15)
 ylabel('km','FontSize',15)
@@ -252,7 +252,7 @@ obj = [1 2];
 scale = [1000 500 10]; % DO NOT CHANGE!!!
 Plot_Celestial_Objects(sun,obj,orbit,date,scale)
 title('Given orbits','FontSize',15)
-legend('Mercury', 'Venus','FontSize',15)
+legend('Mercury', 'Venus','FontSize',17,'Location','best')
 grid on
 xlabel('km')
 ylabel('km')
@@ -280,15 +280,14 @@ scale = [7000 2500  1000 30]; % DO NOT CHANGE!!!
 orbit = 2;
 Plot_Celestial_Objects(sun,obj,orbit,date,scale)
 title('Complete transfer trajectory','FontSize',15)
-legend('Arc 1','Arc 2','Neptune','Venus','Mercury','FontSize',15)
+legend('Arc 1','Arc 2','Mercury', 'Venus','Neptune','FontSize',17,'Location','best')
 grid on
 xlabel('km')
 ylabel('km')
 zlabel('km')
 % Enlarge figure to full screen.
-set(gcf, 'Units', 'Normalized', 'OuterPosition', [0, 0.04, 1, 0.96]);
 set(gca,'FontSize',20)
-saveas(gcf,'transfer_a.png')
+saveas(gcf,'complete_strategy.eps')
 
 figure(4) % transfer plus planets zoommed
 plotTrajectory(r1, r2, v1, v2, muSun, disp)
@@ -297,9 +296,9 @@ obj = [1 2];
 scale = [2000 1000 10]; % DO NOT CHANGE!!!
 Plot_Celestial_Objects(sun,obj,orbit,date,scale)
 title('Complete transfer trajectory','FontSize',15)
-legend('Arc 1','Arc 2','Mercury', 'Venus','FontSize',15)
+legend('Arc 1','Arc 2','Mercury', 'Venus','FontSize',17,'Location','best')
 grid on
-zlim([-15*10^7 15*10^7])
+zlim([-20*10^7 15*10^7])
 xlabel('km')
 ylabel('km')
 zlabel('km')
@@ -313,7 +312,7 @@ plotTrajectory(r1, r2, v1, v2, muSun, disp)
 hold on
 PlotObject(0, [0 0 0], 30)
 title('Complete transfer trajectory','FontSize',15)
-legend('Arc 1','Arc 2','FontSize',15)
+legend('Arc 1','Arc 2','FontSize',17,'Location','best')
 grid on
 xlabel('km')
 ylabel('km')
@@ -328,7 +327,7 @@ plotTrajectory(TRANSFER1.r1, TRANSFER1.r2, TRANSFER1.v1, TRANSFER1.v2, muSun, di
 hold on
 PlotObject(0, [0 0 0], 30)
 title('First arc','FontSize',15)
-legend('Arc 1','FontSize',15)
+legend('Arc 1','FontSize',17,'Location','best')
 grid on
 xlabel('km')
 ylabel('km')
@@ -343,7 +342,7 @@ plotTrajectory(TRANSFER2.r1, TRANSFER2.r2, TRANSFER2.v1, TRANSFER2.v2, muSun, di
 hold on
 PlotObject(0, [0 0 0], 10)
 title('Second arc')
-legend('Arc 2','FontSize',15)
+legend('Arc 2','FontSize',17,'Location','best')
 grid on
 xlabel('km')
 ylabel('km')

@@ -359,9 +359,9 @@ ylabel('${|f_{Car} - f_{Gauss}| / f_{Gauss} [-]}$','Interpreter', 'latex')
 load('Polar_Real_Time_Elements_hourly.mat')
 
 % Creating a table containing the real time orbital elements
-T = table(REALTLES);
+TABLE = table(REALTLES);
 %Converting table to array
-POLAR = table2array(T);
+POLAR = table2array(TABLE);
 
 % Creating a vector of julian days for the the TLEs
 DATES = POLAR(:,1);
@@ -385,57 +385,59 @@ KEP(:,6) = deg2rad(KEP(:,6));
 KEP(3:end,6) = unwrap(KEP(3:end,6),[],1);
 KEP(:,6) = rad2deg(KEP(:,6));
 
+DATES = DATES-DATES(1);
+
 figure()
 
 % Semi-major axis
 subplot(2,3,1)
-plot(DATES -(2451545),KEP(:,1),'b.',tspan,kepB(:,1),'r-',tspan,kep_gauss(:,1),'k-','LineWidth',2);
+plot(DATES,KEP(:,1),'b.',tspan,kepB(:,1),'r-',tspan,kep_gauss(:,1),'k-','LineWidth',2);
 legend('TLEs','Cartesian','Gauss equations');
 grid on
-xlabel('${time [T in days]}$','Interpreter', 'latex','Fontsize', 14)
+xlabel('${time [days]}$','Interpreter', 'latex','Fontsize', 14)
 ylabel('$\mathbf{a [Km]}$','Interpreter', 'latex','Fontsize', 14)
 
 % Eccentricity
 % jd = juliandate(DATES);
 subplot(2,3,2)
-plot(DATES - (2451545),KEP(:,2),'b.',tspan,kepB(:,2),'r-',tspan,kep_gauss(:,2),'k-','LineWidth',2);
+plot(DATES,KEP(:,2),'b.',tspan,kepB(:,2),'r-',tspan,kep_gauss(:,2),'k-','LineWidth',2);
 legend('TLEs','Cartesian','Gauss equations');
 grid on
-xlabel('${time [T in days]}$','Interpreter', 'latex','Fontsize', 14)
+xlabel('${time [days]}$','Interpreter', 'latex','Fontsize', 14)
 ylabel('$\mathbf{e [-]}$','Interpreter', 'latex','Fontsize', 14)
 
 
 % inclination
 subplot(2,3,3)
-plot(DATES - (2451545),KEP(:,3),'b.',tspan,kepB(:,3),'r-',tspan,kep_gauss(:,3),'k-','LineWidth',2);
+plot(DATES,KEP(:,3),'b.',tspan,kepB(:,3),'r-',tspan,kep_gauss(:,3),'k-','LineWidth',2);
 legend('TLEs','Cartesian','Gauss equations');
 grid on
-xlabel('${time [T in days]}$','Interpreter', 'latex','Fontsize', 14)
+xlabel('${time [days]}$','Interpreter', 'latex','Fontsize', 14)
 ylabel('$\mathbf{i [deg]}$','Interpreter', 'latex','Fontsize', 14)
 
 % RAAN
 subplot(2,3,4)
-plot(DATES - (2451545),KEP(:,4),'b.',tspan,kepB(:,4),'r-',tspan,kep_gauss(:,4),'k-','LineWidth',2);
+plot(DATES,KEP(:,4),'b.',tspan,kepB(:,4),'r-',tspan,kep_gauss(:,4),'k-','LineWidth',2);
 legend('TLEs','Cartesian','Gauss equations');
 grid on
-xlabel('${time [T in days]}$','Interpreter', 'latex','Fontsize', 14)
+xlabel('${time [days]}$','Interpreter', 'latex','Fontsize', 14)
 ylabel('$\mathbf{\Omega  [deg]}$','Interpreter', 'latex','Fontsize', 14)
 
 % omega
 subplot(2,3,5)
-plot(DATES -(2451545),KEP(:,5),'b.',tspan,kepB(:,5),'r-',tspan,kep_gauss(:,5),'k-','LineWidth',2);
+plot(DATES ,KEP(:,5),'b.',tspan,kepB(:,5),'r-',tspan,kep_gauss(:,5),'k-','LineWidth',2);
 legend('TLEs','Cartesian','Gauss equations');
 grid on
-xlabel('${time [T in days]}$','Interpreter', 'latex','Fontsize', 14)
+xlabel('${time [days]}$','Interpreter', 'latex','Fontsize', 14)
 ylabel('$\mathbf{\omega  [deg]}$','Interpreter', 'latex','Fontsize', 14)
 
 
 % f
 subplot(2,3,6)
-plot(DATES - (2451545),KEP(:,6),'b.',tspan,kepB(:,6),'r-',tspan,kep_gauss(:,6),'k-','LineWidth',2);
+plot(DATES,KEP(:,6),'b.',tspan,kepB(:,6),'r-',tspan,kep_gauss(:,6),'k-','LineWidth',2);
 legend('TLEs','Cartesian','Gauss equations');
 grid on
-xlabel('${time [T in days]}$','Interpreter', 'latex','Fontsize', 14)
+xlabel('${time [days]}$','Interpreter', 'latex','Fontsize', 14)
 ylabel('$\mathbf{f  [deg]}$','Interpreter', 'latex','Fontsize', 14)
 
 %% Plot the Orbit evolution
