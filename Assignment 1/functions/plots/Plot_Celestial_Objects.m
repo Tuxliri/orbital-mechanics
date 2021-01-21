@@ -26,7 +26,7 @@ function Plot_Celestial_Objects(sun,obj,orbit,date,scale)
 %           0 Celestial object only
 %           1 Celestial object's orbit only
 %           2 Celestial object and it's orbit
-%   date  [6 x 1]: date in the Gregorian calendar, as a 6-elements vector
+%   date  [ n x 6 ]: date in the Gregorian calendar, as a 6-elements vector
 %       [year, month, day, hour, minute, second]. For dates before
 %       1582, the resulting date components are valid only in the Gregorian
 %       proleptic calendar. This is based on the Gregorian calendar but 
@@ -58,18 +58,25 @@ function Plot_Celestial_Objects(sun,obj,orbit,date,scale)
 %   18-01-2021: Second Version
 %
 
+n = length(obj);
+
 % Convert Gregorian (current) date into MJD200
-mjd = date2mjd2000(date);
+mjd = [];
+for j = 1:n
+    time = date2mjd2000(date(j,:));
+    mjd = [mjd time];
+end
+
 
 % Extract ephemeresis information for given Celestial Objects
-a = zeros(length(obj),1);
-e = zeros(length(obj),1);
-i = zeros(length(obj),1);
-Om = zeros(length(obj),1);
-om = zeros(length(obj),1);
-theta = zeros(length(obj),1);
-for j = 1:length(obj)
-    [kep, ~] = uplanet(mjd, obj(j));
+a = zeros(n,1);
+e = zeros(n,1);
+i = zeros(n,1);
+Om = zeros(n,1);
+om = zeros(n,1);
+theta = zeros(n,1);
+for j = 1:n
+    [kep, ~] = uplanet(mjd(j), obj(j));
     a(j) = kep(1);
     e(j) = kep(2);
     i(j) = kep(3);
@@ -79,9 +86,9 @@ for j = 1:length(obj)
 end
 
 % Calculate CO positions
-r = zeros(length(obj),3); % r [ n x 3]
+r = zeros(n,3); % r [ n x 3]
 mu = astroConstants(4);
-for j = 1:length(a)
+for j = 1:n
     [r_, ~] = kep2car(a(j), e(j), i(j), Om(j), om(j), theta(j), mu); % r [ n x 3 ]
     r(j,1) = r_(1);
     r(j,2) = r_(2);
@@ -90,23 +97,23 @@ end
 
 % Display COs or orbits or both
 if orbit == 0
-    for j = 1:length(obj)
+    for j = 1:n
         PlotObject(obj(j), r(j,:), scale(j));
         hold on;
     end
 elseif orbit == 1
-    for j = 1:length(obj)
-        plotOrbit(obj(j), date);
+    for j = 1:n
+        plotOrbit(obj(j), date(j,:));
         hold on;
     end
 elseif orbit == 2 
     % The two for cycles must be separated in order to have meaningful
     % legend when plotting
-    for j = 1:length(obj)
-        plotOrbit(obj(j), date);
+    for j = 1:n
+        plotOrbit(obj(j), date(j,:));
         hold on;
     end
-    for i = 1:length(obj)
+    for i = 1:n
         PlotObject(obj(i), r(i,:), scale(i));
         hold on;
     end
@@ -116,9 +123,6 @@ end
 
 % Display Sun
 if sun == 1
-    if length(obj) < 9
-        j = length(obj);
-    end
-    PlotObject(0, [0 0 0], scale(j+1));
+    PlotObject(0, [0 0 0], scale(n + 1));
 end
 end

@@ -106,5 +106,5 @@ else % First case
 end
 
 % Data representation
-plot3(X, Y, Z, color, 'LineWidth', 0.5);
+plot3(X, Y, Z, color, 'LineWidth', 2);
 end

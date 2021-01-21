@@ -228,23 +228,40 @@ dv_perc = DV_ga/DV*100
 %% Transfer plots
 clc; close all;
 
-% Given orbits
+%Given orbits
 figure(1) 
-date = dep;
+date = [arr; fly; dep]; % Planets are plotted in this order
 sun = 1;
 obj = [1 2 8];
 scale = [7000 2500  1000 30]; % DO NOT CHANGE!!!
 orbit = 2;
 Plot_Celestial_Objects(sun,obj,orbit,date,scale)
-title('Given orbits')
-legend('Mercury', 'Venus','Neptune')
+title('Given orbits','FontSize',15)
+legend('Mercury', 'Venus','Neptune','FontSize',15)
+grid on
+xlabel('km','FontSize',15)
+ylabel('km','FontSize',15)
+zlabel('km','FontSize',15)
+% Enlarge figure to full screen.
+set(gcf, 'Units', 'Normalized', 'OuterPosition', [0, 0.04, 1, 0.96]);
+set(gca,'FontSize',20)
+saveas(gcf,'GivenOrbits.png')
 
 figure(2)
 obj = [1 2];
 scale = [1000 500 10]; % DO NOT CHANGE!!!
 Plot_Celestial_Objects(sun,obj,orbit,date,scale)
-title('Given orbits')
-legend('Mercury', 'Venus')
+title('Given orbits','FontSize',15)
+legend('Mercury', 'Venus','FontSize',15)
+grid on
+xlabel('km')
+ylabel('km')
+zlabel('km')
+% Enlarge figure to full screen.
+set(gcf, 'Units', 'Normalized', 'OuterPosition', [0, 0.04, 1, 0.96]);
+set(gca,'FontSize',20)
+
+saveas(gcf,'GivenOrbits_b.png')
 
 % transfer
 
@@ -253,48 +270,93 @@ r1 = [TRANSFER1.r1; TRANSFER2.r1];
 r2 = [TRANSFER1.r2; TRANSFER2.r2];
 v1 = [TRANSFER1.v1; TRANSFER2.v1];
 v2 = [TRANSFER1.v2; TRANSFER2.v2];
-disp = 1;
+disp = 0;
+
 plotTrajectory(r1, r2, v1, v2, muSun, disp)
 hold on;
-date = dep;
 sun = 1;
 obj = [1 2 8];
 scale = [7000 2500  1000 30]; % DO NOT CHANGE!!!
 orbit = 2;
 Plot_Celestial_Objects(sun,obj,orbit,date,scale)
-title('Complete transfer trajectory')
-legend('Orb. 1','Orb. 2','Arc 1','Arc 2','Mercury', 'Venus','Neptune')
+title('Complete transfer trajectory','FontSize',15)
+legend('Arc 1','Arc 2','Neptune','Venus','Mercury','FontSize',15)
+grid on
+xlabel('km')
+ylabel('km')
+zlabel('km')
+% Enlarge figure to full screen.
+set(gcf, 'Units', 'Normalized', 'OuterPosition', [0, 0.04, 1, 0.96]);
+set(gca,'FontSize',20)
+saveas(gcf,'transfer_a.png')
 
 figure(4) % transfer plus planets zoommed
-disp = 1;
 plotTrajectory(r1, r2, v1, v2, muSun, disp)
 hold on;
 obj = [1 2];
-scale = [1000 500 10]; % DO NOT CHANGE!!!
+scale = [2000 1000 10]; % DO NOT CHANGE!!!
 Plot_Celestial_Objects(sun,obj,orbit,date,scale)
-title('Complete transfer trajectory')
-legend('Orb. 1','Orb. 2','Arc 1','Arc 2','Mercury', 'Venus')
-axis equal
+title('Complete transfer trajectory','FontSize',15)
+legend('Arc 1','Arc 2','Mercury', 'Venus','FontSize',15)
+grid on
+zlim([-15*10^7 15*10^7])
+xlabel('km')
+ylabel('km')
+zlabel('km')
+% Enlarge figure to full screen.
+set(gcf, 'Units', 'Normalized', 'OuterPosition', [0, 0.04, 1, 0.96]);
+set(gca,'FontSize',20)
+saveas(gcf,'transfer_b.png')
 
 figure (5) % transfer only
 plotTrajectory(r1, r2, v1, v2, muSun, disp)
-title('Complete transfer trajectory')
-legend('Orb. 1','Orb. 2','Arc 1','Arc 2')
-axis equal
+hold on
+PlotObject(0, [0 0 0], 30)
+title('Complete transfer trajectory','FontSize',15)
+legend('Arc 1','Arc 2','FontSize',15)
+grid on
+xlabel('km')
+ylabel('km')
+zlabel('km')
+% Enlarge figure to full screen.
+set(gcf, 'Units', 'Normalized', 'OuterPosition', [0, 0.04, 1, 0.96]);
+set(gca,'FontSize',20)
+saveas(gcf,'transfer_c.png')
 
 figure (6) % first arc only
 plotTrajectory(TRANSFER1.r1, TRANSFER1.r2, TRANSFER1.v1, TRANSFER1.v2, muSun, disp)
-title('First arc')
-legend('Orb. 1','Arc 1')
-axis equal
+hold on
+PlotObject(0, [0 0 0], 30)
+title('First arc','FontSize',15)
+legend('Arc 1','FontSize',15)
+grid on
+xlabel('km')
+ylabel('km')
+zlabel('km')
+% Enlarge figure to full screen.
+set(gcf, 'Units', 'Normalized', 'OuterPosition', [0, 0.04, 1, 0.96]);
+set(gca,'FontSize',20)
+saveas(gcf,'first_arc.png')
 
 figure (7) % second arc only
 plotTrajectory(TRANSFER2.r1, TRANSFER2.r2, TRANSFER2.v1, TRANSFER2.v2, muSun, disp)
+hold on
+PlotObject(0, [0 0 0], 10)
 title('Second arc')
-legend('Orb. 2','Arc 2')
-axis equal
+legend('Arc 2','FontSize',15)
 grid on
+xlabel('km')
+ylabel('km')
+zlabel('km')
+% Enlarge figure to full screen.
+set(gcf, 'Units', 'Normalized', 'OuterPosition', [0, 0.04, 1, 0.96]);
+set(gca,'FontSize',20)
+
+saveas(gcf,'second_arc.png')
+
+
 %% plot hyperbola
+clc; close all;
 
 % Plot the two planetocentric hyperbolic arcs
 tspanA = linspace(0,-10000,10000);         % Plotting backward in time
@@ -306,15 +368,19 @@ tspanB = linspace(0,10000,10000);
 
 % Plot the arrival hyperbola
 figure(8);
-title('Venus flyby')
+title('Venus flyby','FontSize',15)
 hold on;
+grid on;
+xlabel('km')
+ylabel('km')
+zlabel('km')
 legend on;
 ARR = plot3(r_A(:,1),r_A(:,2),r_A(:,3), 'LineWidth', 2);
 ARR.DisplayName = 'Incoming hyperbola';
 
 % Plot the departure hyperbola
 DEP = plot3(r_B(:,1),r_B(:,2),r_B(:,3), 'LineWidth', 2);
-DEP.DisplayName = 'Outcoming hyperbola';
+DEP.DisplayName = 'Outgoing hyperbola';
 
 % Asymptotes not needed
 hold on;

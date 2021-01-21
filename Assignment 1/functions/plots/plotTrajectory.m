@@ -73,7 +73,7 @@ for j = 1:m % Select arc
         y = [y r_vec(2)];
         z = [z r_vec(3)];
     end
-    plot3(x(1,:), y(1,:), z(1,:))
+    plot3(x(1,:), y(1,:), z(1,:),'LineWidth',2)
     hold on;
 end
 end

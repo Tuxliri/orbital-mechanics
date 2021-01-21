@@ -38,9 +38,6 @@ RAAN = s(4);
 omega = s(5);
 f = s(6);
 
-% Calculate the radius of the S/C wrt to sun in the Inertial frame:
-% VECTORIAL SUM: R_sc-sun = - (R_sun-e + R_e-sc
-
 % Get keplerian elements of the Earth in Sun-centred ecliptic 
 %     system
 
@@ -71,14 +68,8 @@ ROT = [1 0 0;
 
 rS = ROT*(rS');
 
-% Get position vector R-sc-sun
-% R_sc_sun = -(rE + rSC');
-
-%% IMPROVEMENT/NEEDED: IMPLEMENT ECLIPSE CONDITION!!!
-
 % ECLIPSE CHECK algorithm from curtis page 526
 % Vector from Earth to sun is opposite of vecotr from Sun to Earth
-% rS = -rE;
 
 theta = acos(dot(rS,rSC)/(norm(rS)*norm(rSC)));
 theta_1 = acos(R_E/norm(rSC));
