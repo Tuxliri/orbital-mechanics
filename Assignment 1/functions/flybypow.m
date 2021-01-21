@@ -27,9 +27,6 @@ function [dv_p,delta,a,e,Delta,rp,vp0] = flybypow(vinfM,vinfP,mu)
 %
 % VERSIONS
 %   2020-12-04: First version
-%
-% CALLED FUNCTIONS:
-%   GAtransfer
 
 vinfm = norm(vinfM);
 vinfp = norm(vinfP);

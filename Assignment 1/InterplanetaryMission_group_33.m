@@ -374,13 +374,14 @@ xlabel('km')
 ylabel('km')
 zlabel('km')
 legend on;
+legend('FontSize',17,'Location','best')
 ARR = plot3(r_A(:,1),r_A(:,2),r_A(:,3), 'LineWidth', 2);
 ARR.DisplayName = 'Incoming hyperbola';
 
 % Plot the departure hyperbola
 DEP = plot3(r_B(:,1),r_B(:,2),r_B(:,3), 'LineWidth', 2);
 DEP.DisplayName = 'Outgoing hyperbola';
-
+set(gca,'FontSize',20)
 % Asymptotes not needed
 hold on;
 PlotObject(Venus.ID)

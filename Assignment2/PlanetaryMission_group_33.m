@@ -26,10 +26,11 @@ Psr = 4.56e-6;                  % Solar radiation pressure at 1AU       [N/m^2]
 NDAYS = 1000;                      % Number of days to propagate for perturbations [days]
 
 %% Assigned orbit parameters
-selection = 3;
+% CHOOSE THE DESIRED SATELLITE
+selection = 1;
 
 switch selection
-    case 1
+    case 1  % ASSIGNED SATELLITE
         a = 40718;		% [km]	semi-major axis
         e = 0.6177; 	% [-]	eccentricity
         i = deg2rad(78.2195);	% [deg]	inclination
@@ -71,8 +72,8 @@ switch selection
         Cr = 2;		% [-] reflectivity coefficient
         Am = 2;			% [m^2/kg] area-to-mass ratio
         
-    case 3
-        % Real TLEs comparison
+    case 3% Real TLEs comparison
+        
         a = 3.487516398368765E+04;		% [km]	semi-major axis
         e = 6.931588472978080E-01; 	% [-]	eccentricity
         i = deg2rad(84.72791562472406);	% [deg]	inclination
