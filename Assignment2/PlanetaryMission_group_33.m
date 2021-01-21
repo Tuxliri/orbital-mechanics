@@ -2,6 +2,7 @@
 clc
 clear all
 close all
+tic
 
 %% Set path to default
 path(pathdef);
@@ -135,10 +136,10 @@ for j = 1 : 3
     
     % Unperturbed original
     plot_groundtrack(lon,lat,'y');
-    
+    set(gca,'FontSize',20)
     % J2 perturbed original
     plot_groundtrack(lon_j2,lat_j2,'r');
-    
+    set(gca,'FontSize',20)
     legend ('Unperturbed original', 'Start', 'End','J2 perturbed original', 'Start', 'End','Orientation','horizontal','Location','northoutside' );
     
     switch j
@@ -150,18 +151,18 @@ for j = 1 : 3
             
             % Repeating ground track
             plot_groundtrack(lon_repeating,lat_repeating, 'y' );
-            
+            set(gca,'FontSize',20)
             % J2 Perturbed ground track
             plot_groundtrack(lon_secular, lat_secular, 'r');
+            set(gca,'FontSize',20)
+            legend ('Unperturbed repeating GT', 'Start', 'End','J2 perturbed repeating GT', 'Start', 'End','Orientation','horizontal','Location','northoutside','FontSize',20);
             
-            legend ('Unperturbed repeating GT', 'Start', 'End','J2 perturbed repeating GT', 'Start', 'End','Orientation','horizontal','Location','northoutside' );
-            
-            title('repeating GT of the unpert. 2BP and of the 2BP pert. by J2 - 1 orbit')
+            title('repeating GT of the unpert. 2BP and of the 2BP pert. by J2 - 1 orbit','FontSize',20)
             
         case 2
-            title('GT of the unpert. 2BP and of the 2BP pert. by J2 - 1 day')
+            title('GT of the unpert. 2BP and of the 2BP pert. by J2 - 1 day','FontSize',20)
         case 3
-            title('GT of the unpert. 2BP and of the 2BP pert. by J2 - 10 days')
+            title('GT of the unpert. 2BP and of the 2BP pert. by J2 - 10 days','FontSize',20)
     end
 end
 
@@ -337,10 +338,9 @@ for j=1:2
         case 1
             norb=1;
         case 2
-            norb=500;
+            norb=1000;
     end
     pointsperorb=1000;
-    %plot
     figure
     axis equal
     rin=r0;
@@ -358,8 +358,10 @@ for j=1:2
         switch j
             case 1
                 plot3(pos(:,1),pos(:,2),pos(:,3),'Color',MAP(col,:),'LineWidth',3);
+                set(gca,'FontSize',20)
             case 2
                 plot3(pos(:,1),pos(:,2),pos(:,3),'Color',MAP(col,:));
+                set(gca,'FontSize',20)
         end
         hold on
     end
@@ -369,9 +371,13 @@ for j=1:2
     zlabel('Z');
     switch j
         case 1
-            title('Orbit representation');
+            title('Orbit representation','FontSize',20);
         case 2
-            title('Orbit evolution');
+            title('Orbit evolution','FontSize',20);
+            D = colorbar('EastOutside');
+            D.Ticks = linspace(1,lenmap,5);
+            D.TickLabels = {'1','250','500','750','1000'};
+            D.Label.String = 'number of orbits';
     end
     grid on
     C = imread('EarthTexture.jpg');
@@ -380,3 +386,4 @@ for j=1:2
     axis equal;
     hold on;
 end
+toc
