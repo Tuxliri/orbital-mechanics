@@ -20,7 +20,7 @@ switch orbit
         RAAN = deg2rad(270);
         omega = deg2rad(45);
         f0 = deg2rad(230);
-        periods = 20;               % number of periods to plot
+        periods = 1;               % number of periods to plot
         k =12;
         m = 1;
         
@@ -31,8 +31,8 @@ switch orbit
         RAAN = deg2rad(50);
         omega = deg2rad(280);
         f0 = deg2rad(0);
-        periods = 30;               % number of periods to plot
-        k = 2;
+        periods = 1;               % number of periods to plot
+        k = 1;
         m = 1;
         
     case 3      % Circular LEO orbit

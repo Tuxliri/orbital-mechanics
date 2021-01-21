@@ -2,7 +2,6 @@
 clc
 clear all
 close all
-tic
 
 %% Set path to default
 path(pathdef);
@@ -23,10 +22,12 @@ omega_e = deg2rad(15.04)/3600;  % angular velocity of Earth's rotation  [ rad/s 
 gw_longitude0 = 0;              % longitude of greenwhich   at time t0  [ rad ]
 Psr = 4.56e-6;                  % Solar radiation pressure at 1AU       [N/m^2]
 
-NDAYS = 1000;                      % Number of days to propagate for perturbations [days]
+NDAYS = 1200;                      % Number of days to propagate for perturbations [days]
 
 %% Assigned orbit parameters
-% CHOOSE THE DESIRED SATELLITE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CHOOSE THE DESIRED SATELLITE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 selection = 1;
 
 switch selection
@@ -72,7 +73,7 @@ switch selection
         Cr = 2;		% [-] reflectivity coefficient
         Am = 2;			% [m^2/kg] area-to-mass ratio
         
-    case 3% Real TLEs comparison
+    case 3 % Real TLEs comparison
         
         a = 3.487516398368765E+04;		% [km]	semi-major axis
         e = 6.931588472978080E-01; 	% [-]	eccentricity
@@ -246,7 +247,6 @@ kepB(5:end,6) = unwrap(kepB(5:end,6),[],1);
 kep_gauss(:,3:6) = unwrap(kep_gauss(:,3:6),[],1);
 
 kep_filtered(:,3:6) = unwrap(kep_filtered(:,3:6),[],1);
-% kep_filtered(:,6) = unwrap(kep_filtered(:,6),[],1);
 
 kepB(:,3:6) = rad2deg(kepB(:,3:6));
 kep_gauss(:,3:6) = rad2deg(kep_gauss(:,3:6));
@@ -293,7 +293,7 @@ ylabel('$\mathbf{\Omega -\Omega_0 [deg]}$','Interpreter', 'latex','Fontsize', 14
 
 % omega
 subplot(2,3,5)
-plot(tspan,kep_gauss(:,5)-deg2rad(omega),tspan,kepB(:,5)-deg2rad(omega),tspan,kep_filtered(:,5)-deg2rad(omega));
+plot(tspan,kep_gauss(:,5)-rad2deg(omega),tspan,kepB(:,5)-rad2deg(omega),tspan,kep_filtered(:,5)-rad2deg(omega));
 legend('Gauss equations','Cartesian','Secular (filtered)')
 grid on
 xlabel('${time [days]}$','Interpreter', 'latex','Fontsize', 14)
@@ -309,17 +309,17 @@ xlabel('${time [days]}$','Interpreter', 'latex','Fontsize', 14)
 ylabel('$\mathbf{f-f_0  [deg]}$','Interpreter', 'latex','Fontsize', 14)
 
 %% Compare the difference between the two solutions through plotting
-figure
+figure(3)
 
 % Semi-major axis
-subplot(3,2,1)
+subplot(2,3,1)
 semilogy(tspan,abs((kep_gauss(:,1) - kepB(:,1)))./kep0(1));
 grid on
 xlabel('${time [days]}$','Interpreter', 'latex','Fontsize', 14)
 ylabel('${|a_{Car} - a_{Gauss}| / a0 [-]}$','Interpreter', 'latex')
 
 % Eccentricity
-subplot(3,2,2)
+subplot(2,3,2)
 semilogy(tspan,abs(kep_gauss(:,2) - kepB(:,2)));
 grid on
 xlabel('${time [days]}$','Interpreter', 'latex','Fontsize', 14)
@@ -327,21 +327,21 @@ ylabel('${|e_{Car} - e_{Gauss}| [-]}$','Interpreter', 'latex')
 
 
 % inclination
-subplot(3,2,3)
+subplot(2,3,3)
 semilogy(tspan,abs(kep_gauss(:,3) - kepB(:,3)) ./(2*pi));
 grid on
 xlabel('${time [days]}$','Interpreter', 'latex','Fontsize', 14)
 ylabel('${|i_{Car} - i_{Gauss}| / 2\pi [-]}$','Interpreter', 'latex')
 
 % RAAN
-subplot(3,2,4)
+subplot(2,3,4)
 semilogy(tspan,abs(kep_gauss(:,4) - kepB(:,4)) ./(2*pi));
 grid on
 xlabel('${time [days]}$','Interpreter', 'latex','Fontsize', 14)
 ylabel('${|\Omega_{Car} - \Omega_{Gauss}| / 2\pi [-]}$','Interpreter', 'latex')
 
 % omega
-subplot(3,2,5)
+subplot(2,3,5)
 semilogy(tspan,abs(kep_gauss(:,5) - kepB(:,5)) ./(2*pi));
 grid on
 xlabel('${time [days]}$','Interpreter', 'latex','Fontsize', 14)
@@ -349,7 +349,7 @@ ylabel('${|\omega_{Car} - \omega_{Gauss}| / 2\pi [-]}$','Interpreter', 'latex')
 
 
 % omega
-subplot(3,2,6)
+subplot(2,3,6)
 semilogy(tspan,abs(kep_gauss(:,6) - kepB(:,6)) ./ kep0(5));
 grid on
 xlabel('${time [days]}$','Interpreter', 'latex','Fontsize', 14)
@@ -365,6 +365,8 @@ POLAR = table2array(TABLE);
 
 % Creating a vector of julian days for the the TLEs
 DATES = POLAR(:,1);
+INITIALDATE = jd2date(DATES(1));
+FINALDATE = jd2date(DATES(end));
 
 % Assigning the six orbital elements to KEP matrix
 
@@ -387,19 +389,20 @@ KEP(:,6) = rad2deg(KEP(:,6));
 
 DATES = DATES-DATES(1);
 
-figure()
+figure(4)
 
 % Semi-major axis
-subplot(2,3,1)
+subplot(3,2,1)
 plot(DATES,KEP(:,1),'b.',tspan,kepB(:,1),'r-',tspan,kep_gauss(:,1),'k-','LineWidth',2);
 legend('TLEs','Cartesian','Gauss equations');
 grid on
 xlabel('${time [days]}$','Interpreter', 'latex','Fontsize', 14)
 ylabel('$\mathbf{a [Km]}$','Interpreter', 'latex','Fontsize', 14)
+% saveas
 
 % Eccentricity
 % jd = juliandate(DATES);
-subplot(2,3,2)
+subplot(3,2,2)
 plot(DATES,KEP(:,2),'b.',tspan,kepB(:,2),'r-',tspan,kep_gauss(:,2),'k-','LineWidth',2);
 legend('TLEs','Cartesian','Gauss equations');
 grid on
@@ -408,7 +411,7 @@ ylabel('$\mathbf{e [-]}$','Interpreter', 'latex','Fontsize', 14)
 
 
 % inclination
-subplot(2,3,3)
+subplot(3,2,3)
 plot(DATES,KEP(:,3),'b.',tspan,kepB(:,3),'r-',tspan,kep_gauss(:,3),'k-','LineWidth',2);
 legend('TLEs','Cartesian','Gauss equations');
 grid on
@@ -416,7 +419,7 @@ xlabel('${time [days]}$','Interpreter', 'latex','Fontsize', 14)
 ylabel('$\mathbf{i [deg]}$','Interpreter', 'latex','Fontsize', 14)
 
 % RAAN
-subplot(2,3,4)
+subplot(3,2,4)
 plot(DATES,KEP(:,4),'b.',tspan,kepB(:,4),'r-',tspan,kep_gauss(:,4),'k-','LineWidth',2);
 legend('TLEs','Cartesian','Gauss equations');
 grid on
@@ -424,7 +427,7 @@ xlabel('${time [days]}$','Interpreter', 'latex','Fontsize', 14)
 ylabel('$\mathbf{\Omega  [deg]}$','Interpreter', 'latex','Fontsize', 14)
 
 % omega
-subplot(2,3,5)
+subplot(3,2,5)
 plot(DATES ,KEP(:,5),'b.',tspan,kepB(:,5),'r-',tspan,kep_gauss(:,5),'k-','LineWidth',2);
 legend('TLEs','Cartesian','Gauss equations');
 grid on
@@ -433,7 +436,7 @@ ylabel('$\mathbf{\omega  [deg]}$','Interpreter', 'latex','Fontsize', 14)
 
 
 % f
-subplot(2,3,6)
+subplot(3,2,6)
 plot(DATES,KEP(:,6),'b.',tspan,kepB(:,6),'r-',tspan,kep_gauss(:,6),'k-','LineWidth',2);
 legend('TLEs','Cartesian','Gauss equations');
 grid on
@@ -495,4 +498,3 @@ for j=1:2
     axis equal;
     hold on;
 end
-toc
