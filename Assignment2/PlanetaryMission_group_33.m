@@ -20,12 +20,12 @@ muE = const(2);					% gravitational parameter of Earth      [ km^3/s^2 ]
 J2 = const(3);					% second zonal armonic of earth         [ - ]
 omega_e = deg2rad(15.04)/3600;  % angular velocity of Earth's rotation  [ rad/s ]
 gw_longitude0 = 0;              % longitude of greenwhich   at time t0  [ rad ]
-Psr = 4.56e-6;                  % Solar radiation pressure at 1AU           [N/m^2]
+Psr = 4.56e-6;                  % Solar radiation pressure at 1AU       [N/m^2]
 
-NDAYS = 1;                      % Number of days to propagate for perturbations [days]
+NDAYS = 1000;                      % Number of days to propagate for perturbations [days]
 
 %% Assigned orbit parameters
-selection = 1;
+selection = 3;
 
 switch selection
     case 1
@@ -69,6 +69,31 @@ switch selection
         % SRP perturbation data
         Cr = 2;		% [-] reflectivity coefficient
         Am = 2;			% [m^2/kg] area-to-mass ratio
+        
+    case 3
+        % Real TLEs comparison
+        a = 3.487516398368765E+04;		% [km]	semi-major axis
+        e = 6.931588472978080E-01; 	% [-]	eccentricity
+        i = deg2rad(84.72791562472406);	% [deg]	inclination
+        RAAN = deg2rad(1.123750117977185E+01);
+        omega = deg2rad(2.244379313913353E+02);
+        f0 = deg2rad(1.226135757537926E+02);
+        
+		%ID:23802 POLAR
+        t0 = 0;
+        k = 1;
+        m = 1;
+        periods = 10;               % number of periods to plot
+        
+        date0 = [2000 01 02 00 00 00];  % Initial date at time t=0
+        
+        % SRP perturbation data
+        mass = 1297;    % [kg]
+        area = 2.4*1.8; % [m^2]
+        Cr = 1.2;		% [-] reflectivity coefficient
+        Am = area/mass;			% [m^2/kg] area-to-mass ratio
+        NDAYS = 1035; 
+        
 end
 
 %% Calculate the semi-major axis of the repeating ground track
@@ -154,7 +179,7 @@ for j = 1 : 3
             % J2 Perturbed ground track
             plot_groundtrack(lon_secular, lat_secular, 'r');
             
-            legend ('Unperturbed repeating GT', 'Start', 'End','J2 perturbed repeating GT', 'Start', 'End','Orientation','horizontal','Location','northoutside' );
+            legend ('Unperturbed repeating GT', 'Start', 'End','J2 perturbed repeating GT', 'Start', 'End','Orientation','horizontal','Location','northoutside');
             
             title('repeating GT of the unpert. 2BP and of the 2BP pert. by J2 - 1 orbit')
             
@@ -178,7 +203,6 @@ tStart = tic;
 
 % Initial cartesian elements
 [r0, v0] =  kep2car(a,e,i,RAAN,omega,f0,muE);
-
 
 % Find out how much time the gaussian propagation took
 tGAUSS = toc(tStart);
@@ -213,7 +237,6 @@ kep_filtered = movmean( kep_gauss,nwindow,1);
 %% Compare the two solutions through plotting
 % wrapping
 
-figure(2)
 
 % Add a little gap to cartesian elements to avoid numerical problems
 
@@ -223,6 +246,7 @@ kepB(5:end,6) = unwrap(kepB(5:end,6),[],1);
 kep_gauss(:,3:6) = unwrap(kep_gauss(:,3:6),[],1);
 
 kep_filtered(:,3:6) = unwrap(kep_filtered(:,3:6),[],1);
+% kep_filtered(:,6) = unwrap(kep_filtered(:,6),[],1);
 
 kepB(:,3:6) = rad2deg(kepB(:,3:6));
 kep_gauss(:,3:6) = rad2deg(kep_gauss(:,3:6));
@@ -233,7 +257,8 @@ LINEWIDTH = 2;
 
 %% Plotting
 % Semi-major axis
-figure
+figure(2)
+
 subplot(2,3,1)
 plot(tspan,kep_gauss(:,1)-a,tspan,kepB(:,1)-a,tspan,kep_filtered(:,1)-a);
 legend('Gauss equations','Cartesian','Secular (filtered)')
@@ -329,6 +354,89 @@ semilogy(tspan,abs(kep_gauss(:,6) - kepB(:,6)) ./ kep0(5));
 grid on
 xlabel('${time [days]}$','Interpreter', 'latex','Fontsize', 14)
 ylabel('${|f_{Car} - f_{Gauss}| / f_{Gauss} [-]}$','Interpreter', 'latex')
+
+%% Plot REAL ORBITAL Elements
+load('Polar_Real_Time_Elements_hourly.mat')
+
+% Creating a table containing the real time orbital elements
+T = table(REALTLES);
+%Converting table to array
+POLAR = table2array(T);
+
+% Creating a vector of julian days for the the TLEs
+DATES = POLAR(:,1);
+
+% Assigning the six orbital elements to KEP matrix
+
+% Extracting semi-major axis vector
+KEP(:,1) = POLAR(:,11);
+% Extracting eccentricity vector
+KEP(:,2) = POLAR(:,2);
+% Extracting inclination vector
+KEP(:,3) = POLAR(:,4);
+% Extracting RAAN vector
+KEP(:,4) = POLAR(:,5);
+% Extracting argument of perigee vector
+KEP(:,5) = POLAR(:,6);
+% Extracting true anomaly vector
+KEP(:,6) = POLAR(:,10);
+
+KEP(:,6) = deg2rad(KEP(:,6));
+KEP(3:end,6) = unwrap(KEP(3:end,6),[],1);
+KEP(:,6) = rad2deg(KEP(:,6));
+
+figure()
+
+% Semi-major axis
+subplot(2,3,1)
+plot(DATES -(2451545),KEP(:,1),'b.',tspan,kepB(:,1),'r-',tspan,kep_gauss(:,1),'k-','LineWidth',2);
+legend('TLEs','Cartesian','Gauss equations');
+grid on
+xlabel('${time [T in days]}$','Interpreter', 'latex','Fontsize', 14)
+ylabel('$\mathbf{a [Km]}$','Interpreter', 'latex','Fontsize', 14)
+
+% Eccentricity
+% jd = juliandate(DATES);
+subplot(2,3,2)
+plot(DATES - (2451545),KEP(:,2),'b.',tspan,kepB(:,2),'r-',tspan,kep_gauss(:,2),'k-','LineWidth',2);
+legend('TLEs','Cartesian','Gauss equations');
+grid on
+xlabel('${time [T in days]}$','Interpreter', 'latex','Fontsize', 14)
+ylabel('$\mathbf{e [-]}$','Interpreter', 'latex','Fontsize', 14)
+
+
+% inclination
+subplot(2,3,3)
+plot(DATES - (2451545),KEP(:,3),'b.',tspan,kepB(:,3),'r-',tspan,kep_gauss(:,3),'k-','LineWidth',2);
+legend('TLEs','Cartesian','Gauss equations');
+grid on
+xlabel('${time [T in days]}$','Interpreter', 'latex','Fontsize', 14)
+ylabel('$\mathbf{i [deg]}$','Interpreter', 'latex','Fontsize', 14)
+
+% RAAN
+subplot(2,3,4)
+plot(DATES - (2451545),KEP(:,4),'b.',tspan,kepB(:,4),'r-',tspan,kep_gauss(:,4),'k-','LineWidth',2);
+legend('TLEs','Cartesian','Gauss equations');
+grid on
+xlabel('${time [T in days]}$','Interpreter', 'latex','Fontsize', 14)
+ylabel('$\mathbf{\Omega  [deg]}$','Interpreter', 'latex','Fontsize', 14)
+
+% omega
+subplot(2,3,5)
+plot(DATES -(2451545),KEP(:,5),'b.',tspan,kepB(:,5),'r-',tspan,kep_gauss(:,5),'k-','LineWidth',2);
+legend('TLEs','Cartesian','Gauss equations');
+grid on
+xlabel('${time [T in days]}$','Interpreter', 'latex','Fontsize', 14)
+ylabel('$\mathbf{\omega  [deg]}$','Interpreter', 'latex','Fontsize', 14)
+
+
+% f
+subplot(2,3,6)
+plot(DATES - (2451545),KEP(:,6),'b.',tspan,kepB(:,6),'r-',tspan,kep_gauss(:,6),'k-','LineWidth',2);
+legend('TLEs','Cartesian','Gauss equations');
+grid on
+xlabel('${time [T in days]}$','Interpreter', 'latex','Fontsize', 14)
+ylabel('$\mathbf{f  [deg]}$','Interpreter', 'latex','Fontsize', 14)
 
 %% Plot the Orbit evolution
 for j=1:2
